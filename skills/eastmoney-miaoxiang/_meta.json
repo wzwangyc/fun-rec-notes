@@ -1,0 +1,10 @@
+{
+  "name": "eastmoney-miaoxiang",
+  "version": "1.0.0",
+  "author": "Leo Assistant",
+  "description": "东方财富妙想Claw - 金融投研助理",
+  "homepage": "https://ai.eastmoney.com/chat",
+  "license": "MIT",
+  "tags": ["finance", "eastmoney", "analysis", "china"],
+  "createdAt": "2026-03-14T19:21:00+08:00"
+}

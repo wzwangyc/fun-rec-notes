@@ -1,0 +1,1920 @@
+Meta-HCapsNet: A Meta-Learning Enhanced Hypergraph Capsule
+Network for Accurate and Interpretable Stock Price Forecasting
+Yucheng Wang†a, Zhunyan He†b and Kun Yuc,*
+aSchool of Computing, National University of Singapore, 119077, Singapore
+bSchool of Finance, Wenzhou Kean University , Wenzhou, 066004, China
+cBaidu (China) Co., Ltd, Haidian District, 100085, China
+A R T I C L E I N F O
+Keywords:
+Stock price forecasting
+Capsule networks
+Hypergraph neural networks
+Meta-learning
+Interpretability
+A B S T R A C T
+Stock price sequence prediction is highly challenging due to the high noise, non-stationarity, and
+complex high-order interdependencies in financial time series. The existing deep learning models en-
+counter difficulties in clearly capturing the group-level synergy effects beyond pairwise relationships,
+and also lack adaptability to different market environments as well as the interpretability required
+for practical decision-making. This paper proposes Meta-HCapsNet, an attention-enhanced capsule
+network incorporating hypergraph structure for stock price forecasting. The model introduces three
+key innovations: a lightweight Meta-Adapter that dynamically generates hypergraph construction
+parameters and capsule routing priors based on input statistical features to enable rapid meta-learning
+adaptation; a novel Hypergraph Capsule Routing layer that embeds high-order group correlations into
+the iterative dynamic routing process of capsules; and an adaptive attention pooling mechanism that
+provides intuitive interpretability through activation patterns. Extensive experiments on three real-
+world Chinese stock datasets from BYD, CATL, and CSSC demonstrate that Meta-HCapsNet consis-
+tently outperforms seven state-of-the-art baseline models, including iTransformer and MEAformer,
+achieving up to 54% reduction in MAE as well as significant reductions in RMSE and MAPE across
+short- and long-term horizons. Ablation studies confirm the effectiveness of each component, few-
+shot adaptation experiments verify superior generalization with limited data, and interpretability
+analysis shows that capsule activation intensities strongly correspond to meaningful market phases
+such as rising and retracement, demonstrating the model’s accuracy, adaptability, and transparency in
+modeling complex financial dynamics.
+1. Introduction
+Financial time series prediction has always been a re-
+search hotspot in the interdisciplinary field of artificial in-
+telligence and financial engineering due to its core role in
+quantitative investment, risk hedging, and market super-
+vision. However, the financial market, as a complex dy-
+namical system, exhibits extremely high levels of noise,
+non-stationarity, and multi-factor coupling, making it ex-
+tremely challenging to accurately capture the patterns of
+price fluctuations[1, 2]. Traditional statistical and econo-
+metric models and early machine learning methods often
+encounter limitations in extracting deep market dynamics
+features due to the bottleneck of manual feature engineering
+when dealing with massive high-dimensional and nonlinear
+financial data[3].
+In recent years, the rapid development of deep learning
+technology has completely changed this situation. Long
+Short-Term Memory networks (LSTM) and their variants
+once dominated sequential modeling, but their serial com-
+puting characteristics limited their ability to capture long-
+term dependencies[4]. Subsequently, the Transformer archi-
+tecture achieved breakthroughs in long sequence prediction
+tasks through the self-attention mechanism. For instance,
+∗Corresponding author: Kun Yu (Email: yukun02@baidu.com)
+∗∗This authors contribute equally in this paper.(Yucheng Wang† and
+Zhunyan He†.)
+wangyucheng@u.nus.edu (Y. Wang†); zhunyanh@kean.edu (Z. He†);
+yukun02@baidu.com (K. Yu)
+ORCID(s):
+PatchTST[5] proposed patching time series to retain lo-
+cal semantics, significantly improving prediction accuracy;
+iTransformer[6] solved the problem of feature fusion in
+multi-variable sequences by reversing dimensions and ap-
+plying the attention mechanism on the variable dimension.
+Additionally, DeepONet[7]and various hybrid models[8]
+have also been proposed to further enhance the model’s
+ability to fit nonlinear patterns.
+Although Transformer-based models excel in capturing
+long-range temporal dependencies, they often overlook the
+complex spatial topological structure among financial enti-
+ties. Stocks in the financial market do not fluctuate indepen-
+dently but form a closely interconnected network through
+supply chains, equity relationships, or macro policies. To
+address this issue, graph neural networks (GNNs) have
+been widely adopted, such as STGAT[9] and CIRGNN[10],
+which explicitly model the pairwise relationships between
+stocks using graph attention mechanisms. However, the
+interconnections in the real market often exhibit "group
+synergy" effects, such as collective movements within the
+same concept sector. This higher-order dependency beyond
+pairwise relationships cannot be effectively described by
+simple graph structures. Therefore, the hypergraph theory
+has gained attention. Recent studies, such as FactorGCL[11],
+indicate that hypergraph structures can more accurately
+capture the complex nonlinear group relationships among
+multiple nodes.
+However, the existing models, while striving for high
+accuracy, often encounter two key drawbacks: one is their
+: Preprint submitted to Elsevier
+Page 1 of 14
+lack of adaptability, making it difficult to cope with the
+rapid changes in market styles. The second issue is the
+lack of interpretability. The "black box" nature of deep
+neural networks severely hinders their credibility in financial
+decision-making. To address the aforementioned challenges,
+this paper presents a meta-learning capsule network with
+a hypergraph structure(Meta-HCapsNet) for stock sequence
+prediction. This model incorporates three core innovations:
+Firstly, a lightweight Meta-Adapter is designed based on the
+idea of meta-learning. It dynamically generates hypergraph
+construction parameters and routing priors according to the
+statistical features of the input sequence, enabling the model
+to adapt to different market styles; Secondly, an innovative
+hypergraph Capsule Routing layer is proposed, which em-
+beds the hypergraph structure deeply into the dynamic rout-
+ing process of capsules. In the iterative update, it explicitly
+encodes the high-order group relationships between time
+points, compensating for the shortcomings of traditional
+Transformers and GNNs in modeling high-order correla-
+tions; Finally, an adaptive attention pooling mechanism is
+implemented for decoding from high-level capsules to global
+predictions, and the activation patterns of capsules provide
+intuitive explanations of market states.
+2. Literature review
+Stock market prediction, as an interdisciplinary field
+combining financial engineering and computational intelli-
+gence, is characterized by its complexity due to the high
+noise in market microstructure, the nonlinear transmission
+mechanism of macroeconomic factors, and the group irra-
+tionality of investor behavior[12, 13]. In recent years, with
+the continuous evolution of deep learning architectures, the
+mature application of graph neural network theory, and
+the breakthrough development of generative artificial in-
+telligence technology, stock prediction research has shifted
+from traditional single-variable time series modeling to the
+construction of a systematic framework for multimodal data
+fusion, dynamic relationship graph modeling, and inter-
+pretable intelligent decision-making.
+2.1. Traditional machine learning methods
+The traditional machine learning research for stock pre-
+diction mainly relied on shallow models such as Support
+Vector Machines (SVM)[14] and Random Forests (RF)[15,
+16], and focused on feature optimization and integration
+strategies. For instance, Nti et al.[17] evaluated the compre-
+hensive effectiveness of ensemble learning in stock predic-
+tion in the Journal of Big Data and found that the Stack-
+ing method was significantly superior to a single model.
+Alotaibi[18] proposed a hybrid feature selection method
+based on red deer-gray wolf optimization, achieving a 9.2%
+accuracy improvement in the Saudi stock market.
+Although ensemble learning significantly enhances the
+robustness of predictions through model combination, its
+effectiveness is highly dependent on the quality of input
+features. Therefore, feature engineering, as another core
+pillar determining the upper limit of model performance,
+has achieved breakthrough progress in recent years with
+the empowerment of deep learning[19]. Long et al.[20]
+proposed a deep learning feature engineering framework
+that broke through the limitations of traditional technical
+indicators’ linear combination. It automatically extracted
+high-order abstract features of the price sequence through
+the Restricted Boltzmann Machine (RBM). Paiva et al.[21]
+in Expert Systems with Applications restructured the feature
+engineering process from the perspective of portfolio opti-
+mization, combining the Markowitz mean-variance frame-
+work with machine learning prediction. Through the output
+yield distribution of the model, the optimal weight vector
+was directly generated. In an empirical study at the São Paulo
+Stock Exchange in Brazil, this integrated method increased
+the annualized return of the strategy.
+2.2. Deep learning methods
+While feature engineering lays a solid foundation of
+high-quality data for the model, the continuous innovation of
+the deep learning architecture itself has become another core
+engine driving breakthroughs in prediction performance.
+In recent years, it has achieved leapfrog development in
+three dimensions: long short-term memory network(LSTM)
+optimization, convolutional neural network (CNN) spatio-
+temporal modeling, and Transformer paradigm innovation.
+The LSTM has further consolidated its dominant posi-
+tion in time series modeling due to its gating mechanism.
+Saurabh[22] was the first to apply LSTM to predict the
+daily stock prices of a specific company. Compared with
+traditional machine learning and artificial neural network
+models, it was verified that LSTM can accept and con-
+sider the sequence of input data, which is conducive to the
+persistence of the data. Md et al.[23] innovatively adopted
+a three-layer stacked architecture of sequential LSTM and
+introduced the sine cosine algorithm (SCA) to optimize the
+hyperparameters of the initial learning rate and batch size. In
+the daily price predictions of three technology stocks (Apple,
+Google, and Microsoft), it achieved a reduction of over 60%
+compared to traditional LSTM.
+After the convolutional neural network (CNN) was
+transferred from computer vision to financial time series
+analysis, its local receptive field and parameter sharing
+characteristics have demonstrated unique advantages. The
+BiCuDNNLSTM-1dCNN hybrid model proposed by Kan-
+wal et al.[24] represents the current technological fron-
+tier. This architecture uses bidirectional CUDA-accelerated
+LSTM to extract long-term dependencies, followed by 1D-
+CNN to capture short-term price patterns. On real datasets,
+it outperforms a single LSTM model by 9% and reduces
+training time by 40%. Prasad et al.[25] explored the di-
+mension expansion of CNN and designed 2D-CNN to
+process price-volume heat maps, and 3D-CNN to construct a
+three-dimensional tensor of time-price-technical indicators.
+Through the three-dimensional representation of 82 techni-
+cal features, the prediction accuracy was improved by 3-11%
+on Nasdaq 100 component stocks.
+: Preprint submitted to Elsevier
+Page 2 of 14
+The self-attention mechanism of the Transformer model
+has completely transformed the traditional time-series mod-
+eling approach by demonstrating its superiority in handling
+long-range dependencies. Sun et al.[26] developed a dual-
+channel CNN-LSTM-Attention fusion model that employs
+a multi-head attention mechanism to dynamically allocate
+weights for different time steps. In the CSI300 index pre-
+diction, this model outperformed the traditional model by
+15%. However, the most revolutionary development is the
+MEAformer proposed by Huang et al.[27] discard the tradi-
+tional self-attention mechanism and introduces an external
+attention (External Attention) mechanism, projecting the
+time series to an external memory unit and reducing the
+computational complexity from 𝑂(𝑛2) to 𝑂(𝑛), enabling
+sequence input of up to 2048 time steps. In long-term predic-
+tion tasks, the error is reduced by 15%, while memory usage
+is decreased by 50%.
+2.3. Graph neural network methods
+The inter-industry correlations, supply chain relation-
+ships, and investor co-investment patterns among stocks
+form a complex dynamic graph structure. Kim and Park
+[28] proposed STAD-GCN, which captures the evolution
+of the graph structure through a time attention mecha-
+nism. Each trading day builds a stock correlation graph,
+spatial graph convolution aggregates neighbor informa-
+tion, and time convolution captures sequence dynamics,
+achieving higher accuracy compared to static graph mod-
+els. Yang et al. [29] constructed the MDF-DMC model,
+which introduces multi-view features and updates dynamic
+market correlations through gated recurrent units (GRUs).
+The prediction accuracy on cross-industry stock pools in-
+creased by 6.8%, demonstrating the effectiveness of het-
+erogeneous information fusion. Xiang et al.[30] proposed
+the Time-Heterogeneous Heterogeneous Graph Neural Net-
+work (THGNN) treating stocks, industries, regions, and
+concepts as heterogeneous nodes. It captures high-order
+correlations of "stock - industry - stock" through meta-
+paths. In the prediction of the entire A-share market, this
+model reduces the prediction error for small and medium-
+sized stocks, proving its advantage in data-sparse scenar-
+ios. Huynh et al.[31] proposed the Multi-order Dynamics
+Integration model, which integrates first-order and second-
+order dynamics. It learns individual stock-specific patterns
+through an internal dynamic encoder (IDE) and provides
+new ideas for high-frequency trading.
+3. Methodology
+The overall architecture of Meta-HCapsNet is a hier-
+archical information processing flow, as shown in Figure
+1. The model starts with raw multi-dimensional financial
+time series data, first extracting local features through a
+one-dimensional convolutional layer, and then converting
+them into primary capsule representations containing pose
+information. Next, a lightweight meta-adapter analyzes the
+statistical features of the primary capsule sequence, dy-
+namically generating hypergraph construction parameters
+and capsule routing prior parameters. These parameters are
+then sent to the hypergraph capsule routing layer-the core
+innovative module of this model, which deeply integrates
+the hypergraph structure into the dynamic routing process
+of capsules, generating high-level capsules capable of repre-
+senting complex high-order patterns through iterative opti-
+mization. Finally, the high-level capsules are aggregated into
+a global representation through an adaptive attention pooling
+mechanism and multi-step predictions are made through
+a multi-layer perceptron. The entire process achieves end-
+to-end learning from raw data to prediction results, while
+maintaining the structured and interpretable nature of the
+internal computational process.
+3.1. Input representation
+The input of the model is a standard financial time series
+matrix. Suppose we select the data of the past 𝑇trading
+days, and each trading day contains 𝐹features (such as
+opening price, highest price, lowest price, closing price,
+trading volume, etc.), then the input matrix is represented
+as 𝑋∈𝑅𝑇×𝐹, where 𝑇is the step size of the historical
+time window and 𝐹is the dimension of the input features.
+To capture the patterns within a local time window, we first
+use a one-dimensional convolution layer to extract features
+from the input sequence:
+𝑈= 𝐑𝐞𝐋𝐔(𝑊𝑐∗𝑋+ 𝑏𝑐)
+(1)
+where 𝑊𝑐
+∈
+𝑅𝑘×𝐹×𝐷where ∗represents the one-
+dimensional convolution operation; 𝑊𝑐∈𝑅𝑘×𝐹×𝐷is the
+convolution kernel weight, where 𝑘is the size of the con-
+volution kernel and defines the width of the receptive field;
+𝑏𝑐∈𝑅𝐷is the bias term, and 𝐷is the number of channels
+of the output feature map. The activation function 𝐑𝐞𝐋𝐔
+is used to introduce the ability of nonlinear transformation.
+The output 𝑈can be regarded as a set of feature vectors
+along the time axis, rich in local information, which lays the
+foundation for the subsequent capsule representation.
+3.2. Generation of primary capsules
+In order to transform scalar features into vector represen-
+tations that can simultaneously encode the existence proba-
+bility of entities and their posture attributes, we introduce
+the basic units of the capsule network[32, 33]. First, the
+convolutional feature 𝑈is reshaped into a three-dimensional
+tensor 𝑉(0)
+∈𝑅𝑇×𝐶×𝑑𝑝, where 𝑣(0)
+𝑡,𝑐
+∈𝑅𝑑𝑝represents
+the 𝑐-th primary capsule vector at the 𝑡-th time step. To
+ensure that the magnitude of the capsule vector can represent
+the probability of the existence of the entity and retain the
+attitude information represented by its direction, we apply
+the squash activation function to each capsule:
+𝐒𝐪𝐮𝐚𝐬𝐡(𝑣(0)) =
+‖𝑣(0)‖2
+1 + ‖𝑣(0)‖2 ⋅
+𝑣(0)
+‖𝑣(0)‖
+(2)
+This function maintains the direction of the input vector
+𝑢unchanged, but compresses its magnitude to the interval
+[0, 1). The compressed magnitude can be intuitively inter-
+preted as the confidence level of the existence of a certain
+: Preprint submitted to Elsevier
+Page 3 of 14
+Module 1: 
+originated input 
+F
+T
+R
+X
+´
+Î
+Module 2:
+1D convolution feature extraction
+(
+)
+c
+c
+b
+X
+W
+U
++
+*
+= ReLU
+Module 3：
+Reconstruction and Squash Activation
+( )
+p
+d
+C
+T
+R
+V
+´
+´
+Î
+0
+Module 4
+Statistical feature extraction
+（mean, variance,...）
+Meta-Adapter
+Module 5:
+Parameterized generation of MLP
+[
+]
+(
+)
+f
+;
+MLP
+,
+z
+r
+g
+=
+Q
+Q
+Module 7:
+Supergraph Capsule Routing Layer: 
+(Sparsemax activation; Superedge 
+enhancement; Computing advanced capsules;
+ Reconstruction; Updating logical probabilities)
+Module 6:
+Construction of hypergraph
+{ }
+K
+T
+H
+´
+Î
+1,0
+( )
+å
+=
+j
+R
+j
+jv
+w
+z
+Module 8
+Adaptive attention pooling
+Module 9:
+Multi-step Prediction MLP
+( )z
+y
+MLP
+ˆ =
+Predictive sequence
+R
+yÎ
+ˆ
+Figure 1: Overall Architecture of Meta-HCapsNet
+local market pattern detected by this capsule, while the
+direction of the vector encodes the specific attributes of that
+pattern.
+3.3. The construction of Meta-Adapter
+In order for the model to be able to perceive different
+market conditions and dynamically adjust its internal pa-
+rameters, we have designed a meta-adapter (Meta-Adapter).
+The meta-adapter first extracts a set of low-dimensional but
+informative statistical features 𝑧∈𝑅𝑑𝑠from the primary
+capsule sequence 𝑉(0), which include five parts: mean fea-
+ture 𝜇𝑑, variance feature 𝜎2
+𝑑, autocorrelation feature 𝜌𝜏, trend
+intensity 𝛽and volatility 𝑣𝑜𝑙:
+⎧
+⎪
+⎪
+⎪
+⎪
+⎨
+⎪
+⎪
+⎪
+⎪⎩
+𝜇𝑑=
+1
+𝑇⋅𝐶
+∑𝑇
+𝑡=1
+∑𝐶
+𝑐=1 𝑣(0)
+𝑡,𝑐,𝑑,
+𝑑= 1, ⋯, 𝑑𝑝
+𝜎2
+𝑑=
+1
+𝑇⋅𝐶
+∑𝑇
+𝑡=1
+∑𝐶
+𝑐=1(𝑣(0)
+𝑡,𝑐,𝑑−𝜇𝑑)2
+𝜌𝜏=
+∑𝑇
+𝑡=𝜏+1(𝑣𝑡−̄𝑣)(𝑣𝑡−𝜏−̄𝑣)
+∑𝑇
+𝑡=1(𝑣𝑡−̄𝑣)2
+,
+𝜏= 1, 2
+𝛽= |
+∑𝑇
+𝑡=1(𝑡−̄𝑡)(𝑣𝑡−̄𝑣)
+∑𝑇
+𝑡=1(𝑡−̄𝑡)2
+|
+𝑣𝑜𝑙=
+√
+1
+𝑇−1
+∑𝑇
+𝑡=1(𝑣𝑡−̄𝑣)2
+(3)
+where 𝑣𝑡represents the average of all capsule vectors at time
+step 𝑡, that is 𝑣𝑡= 1
+𝐶
+∑𝐶
+𝑐=1 𝑣(0)
+𝑡,𝑐; ̄𝑣is the mean of all 𝑣𝑡values.
+In this paper, only the autocorrelation coefficients for lags 1
+and 2 are calculated. ̄𝑡= 𝑇+1
+2
+is the mean value of the time
+index.
+By combining all these statistical quantities, we obtain
+the variable 𝑧, which summarizes the macroscopic character-
+istics such as the stationarity, trend, and volatility of the cur-
+rent input sequence. Subsequently, a multi-layer perceptron
+(MLP) with a parameter 𝜙processes this summary vector
+and outputs two sets of key dynamic parameters:
+[Θ𝑔, Θ𝑟] = 𝐌𝐋𝐏(𝑧; 𝜙)
+(4)
+where Θ𝑔= {𝐾, 𝜏, 𝜆𝑓, 𝜆𝑡, 𝜏𝑡} is the parameter set for con-
+structing the hypergraph. 𝐾specifies the number of hyper-
+edges to be generated; 𝜏is the threshold for the similarity be-
+tween nodes, used to determine whether to connect; 𝜆𝑓and
+𝜆𝑡respectively balance the weights of feature similarity and
+temporal proximity in the similarity calculation; 𝜏𝑡controls
+the speed of time decay. These parameters jointly determine
+the granularity of the hypergraph structure. Θ𝑟∈𝑅𝐶×𝑀
+is the routing prior parameter matrix, where 𝑁= 𝑇× 𝐶
+represents the total number of primary capsules and 𝑀
+is the number of advanced capsules to be generated. This
+matrix provides an initial propensity score for the connec-
+tion between each pair of primary and advanced capsules,
+which will be used to initialize the routing log probability
+𝑏𝑖𝑗, thereby guiding the model to focus on specific pattern
+combinations. 𝜙is the learnable parameter of the meta-
+adapter and is optimized through the meta-learning training
+strategy.
+: Preprint submitted to Elsevier
+Page 4 of 14
+1v
+2v
+3v
+4v
+5v
+6v
+1e
+2e
+3e
+4e
+Hypergraph adjacency matrix
+1
+0
+Node 1
+Similarity
+t
+Node 2 Node 3 Node 4 Node 5 Node 6
+Node 1
+Node 2
+Node 3
+Node 4
+Node 5
+Node 6
+1
+0.8
+0.6
+0.4
+0.2
+0
+1v
+2v
+3v
+4v
+5v
+6v
+1
+V
+2
+V
+3
+V
+4
+V
+5
+V
+6
+V
+1e
+2e
+3e
+4e
+Figure 2: Hypergraph Construction and Adjacency Matrix Illustration
+3.4. Hypergraph Capsule Routing Mechanism
+In financial time series, market behavior often presents
+as a group synergy effect: multiple time points may be si-
+multaneously influenced by the same macroeconomic event,
+or a group of related time points may exhibit a coordinated
+movement pattern that goes beyond pairwise relationships.
+To capture this higher-order dependency that goes beyond
+pairwise relationships, this paper innovatively deeply in-
+tegrate the hypergraph structure into the capsule routing
+mechanism, as shown in figure 2.
+To construct the hypergraph, first consider each time
+step t as a node of the hypergraph, and calculate the feature
+vector for each node, which is the average of all the primary
+capsules at that time step:
+𝑣𝑡= 1
+𝐶
+𝐶
+∑
+𝑐=1
+𝑣(0)
+𝑡,𝑐
+(5)
+Next, based on the parameters generated by the meta-
+adapter, the comprehensive similarity between any two time
+points 𝑡and 𝑡′ is calculated. This similarity takes into account
+both the pattern similarity and the temporal proximity:
+𝐬𝐢𝐦(𝑡, 𝑡′) = 𝜆𝑓⋅
+𝑣𝑡⋅𝑣𝑡′
+‖𝑣𝑡‖‖𝑣𝑡′‖ + 𝜆𝑡⋅𝑒𝑥𝑝(−|𝑡−𝑡′|
+𝜏𝑡
+)
+(6)
+where the first item is the cosine similarity, which measures
+the similarity of feature patterns; the second item is the expo-
+nentially decaying time proximity term, suggesting that the
+nodes that are closer in time may have stronger correlations.
+𝜆𝑓and 𝜆𝑡control the relative importance of the two.
+Based on the calculated similarity matrix, we perform
+an adaptive hyper-edge generation process: for each time
+point 𝑡, find all other nodes 𝑡′ whose similarity exceeds the
+threshold 𝜏, and group these nodes into the same hyper-
+edge, ensuring that each hyper-edge contains at least 2 nodes.
+Repeat this process iteratively until approximately 𝐾hyper-
+edges are generated or all nodes are covered. The generated
+hypergraph is represented by an association matrix 𝐻∈
+{0, 1}𝑇×𝐾, where 𝐻𝑡,𝑒= 1 if and only if time step 𝑡belongs
+to hyperedge 𝑒, otherwise it is 0. This hypergraph structure
+explicitly encodes the complex high-order correlation rela-
+tionships between time points.
+The traditional capsule dynamic routing combines low-
+level features to form high-level concepts through iterative
+"protocols", but does not consider the high-order group
+relationships between feature points. To address this, the
+hypergraph structure constructed in the previous step is
+deeply embedded into each step of the routing mechanism
+calculation. There are 𝑁= 𝑇× 𝐶primary capsules 𝑣(0)
+𝑖,
+and the goal is to generate 𝑀capsules 𝑣(𝑅)
+𝑗
+with a dimension
+of 𝑑ℎthrough 𝑅rounds of iterative routing. Each iteration
+consists of the following five closely-linked steps:
+Step 1: Based on the current routing log probability 𝑏(𝑟)
+𝑖𝑗,
+the sparse coupling coefficient 𝑐𝑖𝑗(𝑟) is calculated, which
+represents the contribution weight of the lower-level capsule
+𝑖to the higher-level capsule 𝑗:
+𝑐(𝑟)
+𝑖𝑗= 𝐒𝐩𝐚𝐫𝐬𝐞𝐦𝐚𝐱(𝐛(𝐫)
+𝐢𝐣)
+(7)
+where the Sparsemax function is used instead of the tradi-
+tional Softmax. Its output is sparse, meaning it forces each
+lower-level capsule to establish strong connections only with
+a few of the most relevant higher-level capsules. This en-
+hances the model’s discrimination ability and computational
+efficiency.
+Step2: In traditional routing, the prediction vector of the
+lower-level capsule 𝑖for the higher-level capsule 𝑗is merely
+̂𝑣𝑗|𝑖= 𝑊𝑖𝑗𝑣(0)
+𝑖. To achieve this, a crucial enhancement is
+made: when the capsule makes a prediction, it integrates the
+information from other capsules within its own hyperedge.
+̂𝑣𝑗|𝑖= 𝑊𝑖𝑗𝑣(0)
+𝑖+
+∑
+𝐻𝑡𝑖,𝑒=1
+𝛼𝑖,𝑒⋅𝑊𝑒⋅𝐌𝐞𝐚𝐧({𝑣(0)
+𝑘|𝐻𝑡𝑘,𝑒= 1}) (8)
+The attention weight 𝛼𝑖,𝑒is obtained by taking the dot
+product of the capsule query vector 𝑞𝑖and the hyper-edge
+: Preprint submitted to Elsevier
+Page 5 of 14
+key vector 𝑘𝑒, and then normalizing it through Softmax:
+𝛼𝑖,𝑒=
+𝑒𝑥𝑝(𝑞T
+𝑖𝑘𝑒)
+∑
+𝐻𝑡𝑖,𝑒′=1 𝑒𝑥𝑝(𝑞T𝑘𝑒′
+𝑖
+)
+(9)
+Step 3: Sum up all the enhanced prediction vectors of
+the low-level capsules by weighting them according to their
+coupling coefficients, and obtain the original input of the
+high-level capsules:
+𝑠(𝑟)
+𝑗
+=
+𝑁
+∑
+𝑖=1
+𝑐(𝑟)
+𝑖𝑗̂𝑣(𝑟)
+𝑗|𝑖
+(10)
+Then, the same squashing function is applied for non-
+linear activation, resulting in the output of the advanced
+capsules for this round of iteration:
+𝑣(𝑟)
+𝑗
+= 𝐒𝐪𝐮𝐚𝐬𝐡(𝑠(𝑟)
+𝑗)
+(11)
+Step 4: In order to establish a bidirectional optimiza-
+tion loop between "capsule representation" and "hypergraph
+structure", this paper utilizes the newly generated high-level
+capsules to reconstruct the feature representation of the
+associated hyperedges. For each hyperedge e, we aggregate
+all the high-level capsules that are related to it:
+𝑒(𝑟)
+𝑒= Mean(𝑣(𝑟)
+𝑗
+∣∃𝑖s.t. 𝐻𝑡𝑖,𝑒= 1 and 𝑐(𝑟)
+𝑖𝑗> 0) (12)
+Then, calculate the difference between this round of re-
+configuration and the previous round as the reconfiguration
+loss:
+𝐿(𝑟)
+𝑟𝑒𝑐,𝑒= ‖𝑒(𝑟)
+𝑒−𝑒(𝑟−1)
+𝑒
+‖2
+2
+(13)
+where the loss measures the stability of the super-edge repre-
+sentation, where 𝑒(0)
+𝑒
+is obtained through the polymerization
+of the primary capsules.
+Step 5: Finally, based on the consistency principle and
+the super-edge feedback, the routing log probability 𝑏𝑖𝑗is
+updated. The update rule not only considers the dot product
+of the predicted vector ̂𝑣(𝑟)
+𝑗|𝑖and the current high-level capsule
+output 𝑣(𝑟)
+𝑗, but also introduces the super-edge reconstruction
+loss as a penalty term:
+𝑏(𝑟+1)
+𝑖𝑗
+= 𝑏(𝑟)
+𝑖𝑗+ ̂𝑣(𝑟)
+𝑗|𝑖⋅𝑣(𝑟)
+𝑗−𝛾⋅
+∑
+𝐻𝑡𝑖,𝑒=1
+𝐿(𝑟)
+𝑟𝑒𝑐,𝑒
+(14)
+where ⋅represents the dot product operation, and 𝛾is a learn-
+able equilibrium parameter. This mechanism is of crucial
+importance: it encourages connections that not only enable
+local consistency among capsules but also contribute to the
+formation of stable and consistent group representations at
+the super-level.
+After such an iterative process of 𝑅rounds, a stable set
+of advanced capsules with complex high-order dependency
+relationships is ultimately obtained:
+𝑉(𝑅) = {𝑣(𝑅)
+1 , 𝑣(𝑅)
+2 , ⋯, 𝑣(𝑅)
+𝑀}
+(15)
+3.5. Read out and predict
+After obtaining the high-level capsule collections, a de-
+coding mechanism is needed to convert them into global
+representations for prediction. We adopt adaptive attention
+pooling. The model learns a global query vector 𝑞𝑟, by
+calculating the dot product between it and each high-level
+capsule and normalizing it, to obtain the attention weights
+of each capsule:
+𝑤𝑗=
+𝑒𝑥𝑝(𝑞T
+𝑟⋅𝑣(𝑅)
+𝑗
+)
+∑𝑀
+𝑗′=1 𝑒𝑥𝑝(𝑞T
+𝑟⋅𝑣(𝑅)
+𝑗′ )
+(16)
+This essentially enables the model to determine by itself
+which high-level patterns are more important in the current
+prediction context. After weighted summation, a global con-
+text vector is obtained, and at the same time, the prediction
+values for the next P time steps are directly output through a
+MLP prediction network:
+𝑧= 𝐌𝐋𝐏(
+𝑀
+∑
+𝑗=1
+𝑤𝑗⋅𝑣(𝑅)
+𝑗
+)
+(17)
+3.6. Meta-training strategy
+In order to effectively train the meta-adaptor and en-
+able it to generate highly generalized dynamic parameters
+based on sequence features, this paper adopts the model-
+agnostic meta-learning (MAML) framework and designs a
+curriculum learning strategy[34, 35]. Firstly, a large number
+of meta-learning tasks {𝑖} are constructed from historical
+data. Each task corresponds to a segment of historical data of
+a stock and is divided into a support set 𝐷𝑠𝑢𝑝𝑝
+𝑖
+and a query set
+𝐷𝑞𝑢𝑒𝑟𝑦
+𝑖
+. The training is divided into two stages: the inner-loop
+adaptation and the outer-loop meta-optimization.
+Inner-loop adaptation: For task 𝑖, forward propaga-
+tion is conducted using the support set data, and the meta-
+adaptor generates parameters Θ𝑖. The model uses Θ𝑖to
+calculate the loss 𝑠𝑢𝑝𝑝on the support set and performs only
+one step of gradient descent on the main network parameters
+𝜃to obtain the adapted parameters 𝜃′
+𝑖. During this process,
+the parameters 𝜙of the meta-adaptor are frozen.
+Outer-loop meta-optimization: Using the adapted main
+network parameters 𝜃′
+𝑖and the same meta-parameters Θ𝑖,
+the loss 𝑞𝑢𝑒𝑟𝑦is calculated on the query set. This loss
+reflects the quality of Θ𝑖and provides the gradient for the
+update of the meta-adaptor parameters 𝜙. By aggregating the
+gradients of multiple tasks and simultaneously updating the
+main network parameters 𝜃and the meta-adaptor parameters
+𝜙, the meta-adaptor can learn to generate parameters that
+enable the model to quickly adapt to new tasks.
+To describe the meta-learning training process more
+intuitively, this paper formalizes the meta-learning training
+process in the form of algorithm pseudocode, and provides
+clear and reproducible details for the algorithm implemen-
+tation. The specific details can be found in Algorithm 1.
+: Preprint submitted to Elsevier
+Page 6 of 14
+Algorithm 1 Meta-Learning Training for Meta-HCapsNet
+Require:
+1: Training dataset: = {historical stock data}.
+2: Meta-adapter parameters: 𝜙.
+3: Main network parameters: 𝜃.
+4: Meta-learning rate: 𝛽.
+5: Inner-loop learning rate: 𝛼.
+6: Number of curriculum stages: 𝑆= 3.
+7: Batch size for task sampling: 𝐵.
+8: Number of inner-loop adaptation steps: 𝐾(usually 𝐾=
+1).
+Ensure:
+9: Trained parameters: 𝜙, 𝜃.
+10: Initialize
+11: Randomly initialize 𝜙and 𝜃
+12: Set curriculum stage: 𝑠
+←
+1 (stable) →𝑠
+←
+2
+(transition) →𝑠←3 (volatile)
+13: for epoch = 1 to MaxEpochs do
+14:
+tasks ←SampleTasks(, 𝐵, stage = 𝑠)
+15:
+Initialize meta-gradients: ∇meta
+𝜙
+←𝟎, ∇meta
+𝜃
+←𝟎
+16:
+total_loss ←0
+17:
+for each task 𝑖in tasks do
+18:
+𝜃′
+𝑖←𝜃{Copy main network parameters}
+19:
+for step = 1 to 𝐾do
+20:
+(𝑋supp, 𝑦supp) ←𝑖.support_set
+21:
+̂𝑦supp ←Meta-HCapsNet(𝑋supp; 𝜙, 𝜃′
+𝑖)
+22:
+supp ←ComputeLoss(𝑦supp, ̂𝑦supp)
+23:
+∇𝜃′
+𝑖←𝜕supp∕𝜕𝜃′
+𝑖
+24:
+𝜃′
+𝑖←𝜃′
+𝑖−𝛼⋅∇𝜃′
+𝑖
+25:
+end for
+26:
+(𝑋query, 𝑦query) ←𝑖.query_set
+27:
+̂𝑦query ←Meta-HCapsNet(𝑋query; 𝜙, 𝜃′
+𝑖)
+28:
+query ←ComputeLoss(𝑦query, ̂𝑦query)
+29:
+∇𝜙𝑖←𝜕query∕𝜕𝜙
+30:
+∇𝜃𝑖←𝜕query∕𝜕𝜃
+31:
+∇meta
+𝜙
+←∇meta
+𝜙
++ ∇𝜙𝑖
+32:
+∇meta
+𝜃
+←∇meta
+𝜃
++ ∇𝜃𝑖
+33:
+total_loss ←total_loss + query
+34:
+end for
+35:
+∇meta
+𝜙
+←∇meta
+𝜙
+∕𝐵
+36:
+∇meta
+𝜃
+←∇meta
+𝜃
+∕𝐵
+37:
+𝜙←𝜙−𝛽⋅∇meta
+𝜙
+38:
+𝜃←𝜃−𝛽⋅∇meta
+𝜃
+39:
+LogLoss(epoch, total_loss∕𝐵)
+40:
+if epoch % StageSwitchInterval = 0 then
+41:
+𝑠←𝑠+ 1
+42:
+if 𝑠> 3 then
+43:
+𝑠←3
+44:
+end if
+45:
+end if
+46: end for
+47: return 𝜙, 𝜃
+4. Experimental analysis
+To verify the generalization capability and robustness
+of the proposed framework across diverse market sectors,
+this study employs empirical data from three distinct, high-
+liquidity entities listed on the Chinese stock market. These
+targets are carefully selected to represent the Automotive,
+Electrical Equipment, and Shipbuilding industries, respec-
+tively, ensuring a broad evaluation of the model’s adaptabil-
+ity to different industrial cycles .
+Specifically, the Opening Price is utilized as the primary
+modeling variable, as it encapsulates critical information
+regarding overnight market sentiment and investor expecta-
+tions. The detailed statistics of the selected datasets, includ-
+ing the covered time periods and the total number of trading
+days, are summarized in Table 1.
+Given its pivotal role in aggregating market information,
+the opening price is adopted as the key input feature. The
+fluctuation patterns of the empirical data are depicted in
+Figure 3.
+4.1. Comparative Analysis
+To rigorously evaluate the forecasting proficiency and
+robustness of the proposed Meta-HCapsNet, we executed a
+comprehensive comparative analysis against seven distinct
+baseline models across three real-world stock datasets: BYD,
+CATL, and CSSC. The selection of baselines encompasses
+the evolutionary trajectory of financial time series modeling,
+ensuring a holistic performance assessment:
+Traditional Machine Learning Methods: We selected
+SVM and RF to establish a baseline for non-linear regression
+capabilities without deep feature extraction.
+Deep Sequence and Hybrid Models: We included the
+standard LSTM as a fundamental recurrent baseline. Fur-
+thermore, to represent advanced hybrid architectures, we
+employed BiCuDNNLSTM-1dCNN , which integrates bidi-
+rectional memory with convolutional feature extraction, and
+the CNN-LSTM-Attention model, which utilizes multi-head
+attention to weight temporal features dynamically.
+SOTA Transformer Architectures: We compared against
+iTransformer , which inverts dimensions to capture multi-
+variate correlations, and MEAformer, a cutting-edge model
+that utilizes external attention mechanisms to reduce com-
+plexity and enhance long-term forecasting.
+To ensure reproducibility and fair comparison, all mod-
+els were implemented using PyTorch on an NVIDIA GPU
+platform. The specific hyperparameter configurations for
+each model, determined through grid search and literature
+recommendations, are detailed in Table 2.
+The prediction accuracy was evaluated using three stan-
+dard metrics: Mean Absolute Error (MAE) and Root Mean
+Square Error (RMSE) to measure the magnitude of errors,
+and Mean Absolute Percentage Error (MAPE) to assess the
+relative deviation, as shown in equation 18. Lower values
+in these metrics indicate superior model performance. The
+experiments were conducted under a unified sliding-window
+: Preprint submitted to Elsevier
+Page 7 of 14
+Table 1
+Statistics of Experimental Datasets
+Company
+Industry Sector
+Time Period
+Samples
+BYD Automobile Co., Ltd. (BYD)
+the automotive vehicle industry
+2011/06/30-2025/01/10
+3278
+Contemporary Amperex Technology Co. Ltd.(CATL)
+the electrical equipment industry
+2018/06/11-2025/01/10
+1601
+Contemporary Amperex Technology Co. Ltd.(CATL)
+the shipbuilding industry
+1998/05/20-2025/01/10
+5854
+BYD
+1000
+2000
+3000
+400
+300
+200
+100
+0
+Opening Price
+800
+600
+400
+200
+0
+500
+1000
+1500
+300
+250
+200
+150
+100
+50
+0
+1000 2000 3000 4000 5000
+Opening Price
+Opening Price
+Time points
+Time points
+Time points
+CATL
+CSSC
+Figure 3: Opening Price Time Series of Three Target Stocks
+framework to ensure fair comparison.
+⎧
+⎪
+⎪
+⎨
+⎪
+⎪⎩
+MSE = 1
+𝑁
+∑𝑁
+𝑖=1 |𝑦𝑖−̂𝑦𝑖|
+MAPE = 100%
+𝑁
+∑𝑁
+𝑖=1 | 𝑦𝑖−̂𝑦𝑖
+𝑦𝑖|
+RMSE =
+√
+1
+𝑁
+∑𝑁
+𝑖=1(𝑦𝑖−̂𝑦𝑖)2
+(18)
+where 𝑦𝑖and ̂𝑦𝑖represent the true value and the predicted
+value respectively.
+The quantitative results are presented in Table 3. As
+demonstrated in Table 3, Meta-HCapsNet consistently out-
+performs all baselines across the three datasets. The results
+Table 2
+Hyperparameter Settings of Compared Models
+Category
+Model
+Hyperparameter
+Value / Setting
+Common Setup
+all models
+input window(𝑇)/horizon(𝑝)
+30 / 5
+Optimizer / Learning Rate
+Adam / 1𝑒−3 (decay 0.5 per 10 epochs)
+Batch Size / Epochs
+32 / 100 (Early Stopping: 10)
+Traditional ML
+SVM
+Kernel / C / Epsilon
+RBF / 100 / 0.1
+RF
+estimators / Max Depth
+200 /Full tree
+Deep / Hybrid
+LSTM
+Hidden Dim / Layers
+64 / 2
+BiCuDNNLSTM-1dCNN
+Bi-LSTM Units
+128
+CNN Filters / Kernel Size
+64 / 3
+CNN-LSTM-Attention
+CNN Filters
+64
+LSTM Units
+128
+Attention Heads
+4
+Transformers
+iTransformer
+Model Dim
+512
+Encoder Layers
+2
+MEAformer
+Memory Size
+64
+External Attention Heads
+8
+Proposed
+Meta-HCapsNet
+Primary / High-level Capsule Dim
+𝑑𝑝= 8 / 𝑑ℎ= 16
+Routing Iterations
+3
+Meta-Learning Stages
+3
+Hypergraph Edges
+Adaptive
+: Preprint submitted to Elsevier
+Page 8 of 14
+Table 3
+Performance Comparison of Meta-HCapsNet with Baseline Models on Three Datasets
+Model
+BYD
+CATL
+CSSC
+MAE
+RMSE
+MAPE
+MAE
+RMSE
+MAPE
+MAE
+RMSE
+MAPE
+SVM
+16.26
+20.96
+5.79%
+15.95
+21.13
+6.88%
+5.36
+7.05
+11.19%
+RF
+15.14
+19.45
+5.32%
+15.10
+20.04
+6.52%
+5.01
+6.88
+10.45%
+LSTM
+12.13
+15.87
+4.36%
+13.09
+17.58
+6.07%
+3.36
+4.23
+6.87%
+BiCuDNNLSTM-1dCNN
+10.85
+14.12
+3.92%
+12.88
+17.95
+5.65%
+2.85
+3.56
+5.72%
+CNN-LSTM-Attention
+10.42
+13.75
+3.75%
+12.94
+17.65
+5.58%
+2.56
+3.28
+5.14%
+iTransformer
+9.57
+12.74
+3.36%
+13.01
+17.81
+5.59%
+1.93
+2.53
+4.14%
+MEAformer
+9.25
+12.10
+3.28%
+12.85
+17.40
+5.48%
+2.05
+2.68
+3.95%
+Meta-HCapsNet
+8.84
+11.64
+3.17%
+12.57
+17.01
+5.43%
+1.17
+1.46
+2.46%
+presented in Table ?? confirm that Meta-HCapsNet con-
+sistently secures the leading performance across all three
+datasets.
+In comparison with hybrid deep learning models like
+BiCuDNNLSTM-1dCNN and CNN-LSTM-Attention, our
+proposed architecture delivers a substantial reduction in
+prediction error. Specifically on the CSSC dataset, Meta-
+HCapsNet lowers the MAE from 2.56 to 1.17 relative to the
+CNN-LSTM-Attention baseline, representing an improve-
+ment of approximately 54%. This evidence suggests that
+while hybrid models are capable of local feature extraction
+and temporal memory, their reliance on static geometric
+structures limits their ability to capture dynamic "group syn-
+ergy" effects. Conversely, the Hypergraph Capsule Routing
+mechanism in our model explicitly encodes these high-order
+dependencies to better identify subtle market fluctuations.
+Furthermore, the proposed model outperforms state-of-
+the-art Transformer variants like iTransformer and MEAformer.
+While MEAformer shows competitive accuracy on the BYD
+dataset by achieving an MAE of 9.25, its rigid structure
+limits adaptability to varying market conditions. Our Meta-
+Adapter addresses this by dynamically generating routing
+priors based on statistical features, allowing for tailored
+processing of high-volatility assets like CATL and stable
+assets like CSSC. This capability is evidenced by the supe-
+rior RMSE of 17.01 achieved on the volatile CATL dataset,
+which validates the enhanced robustness and generalization
+of our approach compared to conventional attention-based
+architectures.
+4.2. Robustness Analysis across Extended
+Forecasting Horizons
+To rigorously evaluate the long-term predictive stability
+and performance attenuation of Meta-HCapsNet, we ex-
+panded the forecasting horizon 𝑃from the initial 5 days to a
+range of {5, 10, 20, 30, 40} trading days. The historical look-
+back window 𝑇was maintained at 30 days to examine how
+the model handles increasing uncertainty with limited histor-
+ical input. We compared Meta-HCapsNet against two state-
+of-the-art baselines, iTransformer and MEAformer, across
+three datasets.
+Figure 4 shows the changes in MAE for these three
+models as the prediction period lengthens. Firstly, it can
+be observed that the upward trend of Meta-HCapsNet is
+the most gradual. Taking BYD as an example, the MAE
+of iTransformer increased by approximately 123.2% from
+𝑃= 5 to 𝑃= 40, while Meta-HCapsNet only increased
+by 107.5%. This directly proves that the high-order group
+correlation captured by the hypergraph capsule routing is
+more capable of resisting the non-stationarity and noise
+interference of financial data compared to the traditional
+point-to-point Attention.
+Secondly, it can be observed that on the highly fluc-
+tuating CATL dataset, the differences among the various
+models become increasingly obvious as 𝑃increases. The
+dynamically generated routing prior Θ𝑟by Meta-Adapter
+plays a crucial role here. It can adjust the parameters in
+real time based on the statistical characteristics of the input
+sequence, enabling the model to still accurately adapt to
+the drift of market styles in long-term predictions. On the
+CSSC dataset, when 𝑃= 40, Meta-HCapsNet still keeps
+the MAE at a low level, while the comparison models have
+all exceeded 6.0. This stable performance indicates that
+the capsule network’s encoding ability for entity posture
+information is more resistant to attenuation compared to
+simple scalar feature fusion in multi-step predictions.
+4.3. Ablation experiment
+To thoroughly validate the effectiveness of each key
+component in Meta-HCapsNet, we conducted comprehen-
+sive ablation experiments on the BYD, CATL, and CSSC
+datasets. All ablation variants share the same overall experi-
+mental settings as the full model, including a history window
+length𝑇= 30, prediction horizon𝑃= 5. We constructed six
+ablation variant models. Each variant removes or replaces
+only one key component while keeping all others unchanged
+to isolate the contribution of the targeted component:
+without Meta-Adapter: This variant completely removes
+the Meta-Adapter module. Hypergraph convolution param-
+eters, including weight matrices, and capsule routing priors,
+including initial routing coefficients, are set to fixed values
+that are randomly initialized and frozen throughout training
+instead of being dynamically generated from the input. The
+: Preprint submitted to Elsevier
+Page 9 of 14
+25
+20
+15
+10
+5
+0
+5
+10
+20
+30
+40
+iTransformer
+MEAformer
+Meta-HCapsNet
+iTransformer
+MEAformer
+Meta-HCapsNet
+30
+25
+20
+15
+10
+5
+0
+5
+10
+20
+30
+40
+7
+6
+5
+4
+3
+2
+1
+0
+5
+10
+20
+30
+40
+iTransformer
+MEAformer
+Meta-HCapsNet
+MAE
+MAE
+BYD
+CATL
+MAE
+CSSC
+Prediction horizon
+Prediction horizon
+Prediction horizon
+Figure 4: MAE Comparison Across Different Prediction Horizons
+model therefore loses its ability to rapidly adapt to different
+stock or market styles.
+without Hypergraph: This variant replaces the hyper-
+graph structure with a standard fully connected pairwise
+graph. Hyperedges are decomposed into all possible pair-
+wise edges, and convolution operations degrade to standard
+graph convolutional networks, retaining only second-order
+node relationships and losing the ability to model higher-
+order group synergies.
+without Capsule Routing: This variant removes the dy-
+namic capsule routing mechanism. Feature aggregation in
+the capsule layer is replaced with a standard multilayer per-
+ceptron consisting of two hidden layers with ReLU activa-
+tion that performs linear transformation and summation di-
+rectly on input capsules, eliminating the iterative agreement-
+based routing and encoding of entity existence probabilities.
+without Attention Pooling: This variant removes the
+adaptive attention pooling module. The final global repre-
+sentation is obtained by simple average pooling over all
+high-level capsules followed by a single-layer multilayer
+perceptron with hidden dimension matching the original at-
+tention head output, losing the ability to dynamically weight
+important capsules according to market context.
+without High-order Aggregation: During hypergraph
+capsule routing, this variant uses only the features of the
+central or representative node within each hyperedge for
+updates, ignoring contributions from other associated nodes
+in the hyperedge. This effectively reduces processing to near-
+independent node handling and weakens higher-order group
+information fusion.
+without Reconstruction Loss: This variant removes the
+hyperedge reconstruction loss term during routing updates,
+retaining only the main prediction loss for backpropagation.
+The routing iteration lacks bidirectional constraints and be-
+comes prone to instability in group representations.
+All variables were evaluated using the same 30-day input
+window and 5-day prediction range. The results are shown
+in Table 4.
+The ablation results reveal the critical contributions of
+each component. Removing Meta-Adapter causes the most
+severe degradation, with relative MAE increase of 13.7%
+and RMSE increase of 13.6% on the CATL dataset, demon-
+strating that dynamic parameter generation by Meta-Adapter
+is critical for handling market non-stationarity and stock
+heterogeneity, as fixed parameters fail to adapt effectively
+to different volatility patterns. Replacing hypergraph with
+pairwise graph leads to moderate-to-large degradation, with
+average MAE increase of 6-10%, and the effect is particu-
+larly pronounced on BYD and CATL, validating the unique
+advantage of hypergraphs over fully connected graphs in
+capturing multi-node higher-order relationships such as in-
+dustry chain or sector collective movements. Removing cap-
+sule routing produces one of the largest drops, with MAE
+increase of 38.5% on CSSC, highlighting the irreplaceable
+role of dynamic routing iterations in encoding high-level
+semantic capsules with entity pose and existence probability,
+while standard multilayer perceptron aggregation loses the
+interpretable feature composition process. Removing atten-
+tion pooling results in stable but noticeable degradation,
+with average MAE increase of 4-6%, as adaptive atten-
+tion effectively highlights key group capsules under cur-
+rent market conditions, whereas average pooling produces
+overly smoothed global representations and reduces predic-
+tion precision. Removing high-order aggregation shows sig-
+nificant degradation on high-volatility datasets, with MAE
+increase of 11.5% on CATL, confirming that integrating
+multi-node information within hyperedges is essential for
+modeling collective movement patterns, and relying solely
+on individual node features severely weakens group synergy
+capture. Removing reconstruction loss produces the smallest
+yet consistent degradation, with average MAE increase of 3-
+5% across all datasets, as the auxiliary constraint substan-
+tially improves routing stability and convergence quality,
+preventing local oscillations that arise from unconstrained
+iteration.
+4.4. Few-Shot Adaptation Experiment
+To further validate the meta-learning capability of the
+Meta-Adapter in enabling rapid adaptation to new market
+regimes with limited historical data, we conducted few-shot
+adaptation experiments. These experiments simulate real-
+world scenarios where only scarce data is available for a new
+stock or during emerging market shifts. We adopted a leave-
+one-out protocol. The model was first pre-trained on two
+datasets, BYD and CSSC, using the full meta-learning pro-
+cedure for Meta-HCapsNet and standard end-to-end training
+for the fixed-adapter baseline. The target dataset, CATL, was
+: Preprint submitted to Elsevier
+Page 10 of 14
+Table 4
+Ablation Study Results
+Model
+BYD
+CATL
+CSSC
+MAE
+RMSE
+MAPE
+MAE
+RMSE
+MAPE
+MAE
+RMSE
+MAPE
+Meta-HCapsNet
+8.84
+11.64
+3.17%
+12.57
+17.01
+5.43%
+1.17
+1.46
+2.46%
+w Meta-Adapter
+9.92
+13.05
+3.58%
+14.28
+19.32
+6.15%
+1.48
+1.85
+3.12%
+w Hypergraph
+9.45
+12.48%
+3.41%
+13.86
+18.74
+5.92%
+1.36
+1.69
+2.89%
+w Capsule Routing
+10.38
+13.72
+3.79%
+14.95
+20.16
+6.48%
+1.62
+2.03
+3.45%
+w Attention Pooling
+9.26
+12.21
+3.32%
+13.14
+17.82
+5.68%
+1.29
+1.61
+2.73%
+w High-order Aggregationt
+9.68
+12.79
+3.49%
+14.02
+18.95
+6.03%
+1.41
+1.76
+2.97%
+w Reconstruction Loss
+9.12
+12.03
+3.26%
+12.89
+17.45
+5.56%
+1.24
+1.55
+2.62%
+350
+300
+250
+200
+150
+100
+50
+0
+50
+100
+150
+200
+250
+300
+True
+From Scratch
+ Fine-tune
+Meta-HCapsNet
+350
+300
+250
+200
+150
+100
+50
+0
+Opening Price
+Opening Price
+50
+100
+150
+200
+250
+300
+From Scratch
+Fine-tune
+Meta-HCapsNet
+True
+From Scratch
+ Fine-tune
+Meta-HCapsNet
+From Scratch
+Fine-tune
+Meta-HCapsNet
+25
+20
+15
+10
+5
+0
+Metric
+MAE
+RMSE
+MAPE(%)
+25
+20
+15
+10
+5
+0
+Metric
+MAE
+RMSE
+MAPE(%)
+Time Points
+Time Points
+(a) 50-Shot
+(b) 200-Shot
+Figure 5: Few-Shot Adaptation Results Comparison
+then used for adaptation with varying amounts of support
+data—specifically 50-shot, and 200-shot, corresponding to
+50 and 200 trading days of training sequences. Adaptation
+follows the MAML inner-loop process with three gradient
+steps on the support set for the meta-learning version, while
+the baseline uses standard fine-tuning. This paper compare
+three settings:
+From Scratch: The model is initialized randomly and
+trained only on the limited support set of the target stock.
+Fixed-Adapter Fine-tune: The model is pre-trained with-
+out meta-learning, then fine-tuned on the support set.
+Meta-HCapsNet: The full meta-trained model performs
+few-shot inner-loop adaptation using dynamically generated
+parameters from the Meta-Adapter.
+Figure 5 shows the visualization of the predicted values
+and true values for the three settings in the 50-shot and 200-
+shot scenarios, as well as the presentation of three metrics.
+The results demonstrate that Meta-HCapsNet significantly
+outperforms both baselines in all few-shot regimes, with the
+advantage most pronounced under extremely limited data.
+In the 50-shot setting, Meta-HCapsNet reduces MAE by
+25.3% relative to training from scratch and by 13.3% relative
+to fixed-adapter fine-tuning. This substantial improvement
+stems from the Meta-Adapter’s ability to generate tailored
+hypergraph parameters and routing priors based on input
+statistical features, allowing only a few gradient steps to
+effectively align the model with the new market’s non-
+stationary dynamics. The fixed-adapter variant, despite ben-
+efiting from pre-training, suffers from rigid parameters that
+: Preprint submitted to Elsevier
+Page 11 of 14
+2
+4
+6
+8
+10
+5
+10
+15
+20
+25
+30
+Capsule
+Day
+0.2
+0.3
+0.4
+0.5
+0.6
+0.7
+0.8
+0.9
+Figure 6: Activation Intensity Heatmap of High-Level Capsules in Rising-Retracement Phases
+cannot quickly accommodate the high volatility and distinct
+patterns of CATL. Training from scratch performs worst, as
+expected, due to severe overfitting on scarce data and lack of
+transferable knowledge.
+As the number of shots increases, the performance
+gap narrows but remains consistent, with Meta-HCapsNet
+achieving near full-data performance already at 200 shots.
+These findings robustly validate the effectiveness of the
+MAML-based meta-training strategy: the Meta-Adapter
+learns to produce adaptive parameters that enable fast gener-
+alization, making the model particularly suitable for practi-
+cal financial applications where data for new assets or regime
+shifts is initially limited.
+4.5. Interpretability Analysis
+Although quantitative metrics demonstrate the superior
+predictive performance of Meta-HCapsNet, its capsule-
+based architecture and hypergraph integration also provide
+rich interpretability, addressing a critical limitation of exist-
+ing black-box deep learning models in financial applications.
+In this section, we qualitatively analyze the internal repre-
+sentations of the model to illustrate how high-level capsules
+and hypergraph structures offer intuitive explanations of
+market states and decision-making processes.
+The magnitude of each high-level capsule vector explic-
+itly represents the existence probability of a specific high-
+order market pattern. We visualize the activation strengths
+of all high-level capsules over a representative 30-day input
+window on the BYD dataset, during which the stock expe-
+rienced a clear upward trend followed by a short correction
+As shown in Figure 6, capsules 2, 5, and 8 exhibit
+consistently high activation during the rising phase, suggest-
+ing they encode bullish patterns such as sustained buying
+pressure or positive sector momentum. In contrast, capsule
+4 activates strongly during the correction phase, potentially
+corresponding to risk-averse or profit-taking behaviors. This
+pattern is consistent across multiple windows: capsules with
+high activation during upward movements tend to have pose
+vectors that align with increasing trend intensity statistics
+extracted by the Meta-Adapter.
+2
+4
+6
+8
+10
+Capsule
+1
+2
+3
+4
+5
+0.35
+0.3
+0.25
+0.2
+0.15
+0.1
+0.05
+Instance
+Figure 7: Weight Distribution of High-Level Capsules under
+Adaptive Attention Pooling
+The adaptive attention pooling mechanism further en-
+hances interpretability by revealing which high-level pat-
+terns the model considers most relevant for the final pre-
+diction. Figure 7 displays the attention weights assigned to
+each capsule for five consecutive prediction instances on the
+CATL dataset during a volatile period. We observe that in
+instances where the price rises sharply, the model assigns
+significantly higher weights to capsules 3 and 7, which
+were previously identified as bullish capsules. Conversely,
+during downward movements, weight shifts toward capsule
+6. This dynamic weighting provides stakeholders with clear
+explanations: the model’s prediction is primarily driven by
+specific interpretable high-order patterns rather than opaque
+aggregated features.
+5. Conclusion
+In this study, we proposed Meta-HCapsNet, a novel
+attention-enhanced capsule network with hypergraph struc-
+ture to tackle the challenges of stock price sequence fore-
+casting, including high noise, non-stationarity, and complex
+high-order interdependencies in financial time series. The
+model integrates three key innovations: a lightweight Meta-
+Adapter for rapid meta-learning adaptation, a Hypergraph
+: Preprint submitted to Elsevier
+Page 12 of 14
+Capsule Routing layer for modeling group-level correla-
+tions, and an adaptive attention pooling mechanism for
+improved interpretability. Experiments on three real-world
+Chinese stock datasets (BYD, CATL, and CSSC) show that
+Meta-HCapsNet consistently outperforms seven state-of-
+the-art baselines, including iTransformer and MEAformer,
+achieving up to 54% reduction in MAE and substantial
+improvements in RMSE and MAPE across various horizons.
+Ablation studies confirm the effectiveness of each compo-
+nent, few-shot experiments demonstrate strong generaliza-
+tion with limited data, and interpretability analysis reveals
+capsule activations aligning with meaningful market phases
+such as rising and retracement.
+These results highlight Meta-HCapsNet’s superior ac-
+curacy, adaptability, and transparency in modeling complex
+financial dynamics. Future work will explore extensions to
+multivariate forecasting, integration of multimodal data such
+as news sentiment, and applications to other non-stationary
+domains.
+CRediT authorship contribution statement
+Yucheng Wang†: Investigation, Writing-review & re-
+vising. Zhunyan He†: Literature summary, methodology,
+writing-original draft. Kun Yu: Writing-review & editing,
+supervision.
+Declaration of Competing Interest
+The authors declare that they have no known competing
+financial interests or personal relationships that could have
+appeared to influence the work reported in this paper.
+Acknowledgment
+This work is supported by
+References
+[1] X. Kong, Z. Chen, W. Liu, and etal. Deep learning for time series
+forecasting: A survey. International Journal of Machine Learning
+and Cybernetics, pages 1–60, 2025.
+[2] R. P. Masini, M. C. Medeiros, and E. F. Mendes. Machine learning
+advances for time series forecasting. Journal of Economic Surveys,
+37(1):76–111, 2023.
+[3] E Abdullayev, E Akhmetshin, Z Hajiyev, T Mamadiyarov, Khorol-
+skaya, and L. Lydia. A financial time series forecasting model using
+quasi-recurrent neural networks and the crown porcupine optimizer
+for stock market risk prediction.
+Engineering, Technology and
+Applied Science Research, 15(6):29035–29040, 2025.
+[4] E. Callahan. Financial time series forecasting based on sliding win-
+dow–variational mode decomposition and deep learning. Preprints,
+page 1–10, 2025.
+[5] Y. Nie, N. H. Nguyen, P. Sinthong, and J. Kalagnanam.
+A time
+series is worth 64 words: Long-term forecasting with transformers.
+In Proceedings of the International Conference on Learning Repre-
+sentations (ICLR), page 1–24, 2023.
+[6] Y. Liu, T. Hu, and H. etal. Zhang. itransformer: Inverted transformers
+are effective for time series forecasting.
+In Proceedings of the
+International Conference on Learning Representations (ICLR), page
+1–25, 2024.
+[7] Z. Ahmad, S. Bao, and M. Chen. Deeponet-inspired architecture for
+efficient financial time series prediction. Mathematics, 12(24):3950,
+2024.
+[8] M. Parker, M. Ghahremani, and S. Shiaeles. Stock price prediction
+using a stacked heterogeneous ensemble. International Journal of
+Financial Studies, 13(4):201, 2025.
+[9] R. Feng, S. Jiang, X. Liang, and M. Xia.
+Stgat: Spatial–temporal
+graph attention neural network for stock prediction. Applied Sciences,
+15(8):4315, 2025.
+[10] S. Jia, H. Gao, J. Huang, and etal. Cirgnn: Leveraging cross-chart
+relationships with a graph neural network for stock price prediction.
+Mathematics, 13(15):2402, 2025.
+[11] Y. Duan, W. Wang, and J. Li. Factorgcl: A hypergraph-based factor
+model with temporal residual contrastive learning for stock returns
+prediction. arXiv:2502.05218v1, pages 1–9, 2025.
+[12] P. Xiao. Stock market prediction based on financial news, text data
+mining, and investor sentiment analysis.
+International Journal of
+Information System Modeling and Design, 15(1):1947–8186, 2024.
+[13] S. Agrawal, N. Kumar, G Rathee, C. A. Kerrache, C. T. Calafate,
+and M. Bilal.
+Improving stock market prediction accuracy using
+sentiment and technical analysis.
+Electronic Commerce Research,
+25:4103–4126, 2025.
+[14] W. Xie and N. Metawa.
+Financial stock market forecasting based
+on intelligent support vector machine regression model. Journal of
+Intelligent and Fuzzy Systems, page 1–10, 2021.
+[15] S. Divyashree, C. J. Joshua, A. Q. Md, S. Mohan, A. S. Abdullah,
+U. H. Mohamad, and A. Innab, N.and Ahmadian. Enabling business
+sustainability for stock market data using machine learning and deep
+learning approaches. Annals of Operations Research, 342(1):287–
+322, 2024.
+[16] Y. Xu, C. Yang, S. Peng, and Y. Nojima. A hybrid two-stage financial
+stock forecasting algorithm based on clustering and ensemble learn-
+ing. Applied Intelligence, 50(11):3852–3867, 2020.
+[17] I. K. Nti, A. F. Adekoya, and B. A. Weyori.
+A comprehensive
+evaluation of ensemble learning for stock-market prediction. Journal
+of Big Data, 7(20):1–40, 2020.
+[18] S. S. Alotaibi.
+Ensemble technique with optimal feature selection
+for saudi stock market prediction: A novel hybrid red deer-grey
+algorithm. IEEE Access, 9:64929–64944, 2021.
+[19] S. P. Padalkar, S. S. Bere, and D. B. Hanchate. Prediction of stocks
+and stock price using artificial intelligence. International Journal of
+Creative Research Thoughts(IJCRT), 12:130–136, 2024.
+[20] W. Long, Z. Lu, and L. Cui. Deep learning-based feature engineering
+for stock price movement prediction.
+Knowledge-Based Systems,
+164:163–173, 2019.
+[21] F. D. Paiva, Nogueira Cardoso R. T., G. P. Hanaoka, and et al.
+Decision-making for financial trading: A fusion approach of machine
+learning and portfolio selection. Expert Systems with Application,
+115:635–655, 2019.
+[22] N. Saurabh.
+Lstm-rnn model to predict future stock prices using
+an efficient.
+International Research Journal of Engineering and
+Technology (IRJET), 7(11):672–677, 2020.
+[23] A. Q. Md, S. Kapoor, J A.V. Chris, A.K. Sivaraman, K. F. Tee,
+H. Sabireen, and N. Janakiraman. Novel optimization approach for
+stock price forecasting using multi-layered sequential lstm. Applied
+Soft Computing, 134:109830, 2023.
+[24] A. Kanwal, M.F. Lau, S.P.H. Ng, C. Huang, and X. Yao. Bicudnnlstm-
+1dcnn—a hybrid deep learning-based predictive model for stock price
+prediction. Expert Systems with Applications, 202:117123, 2022.
+[25] A. Prasad and A. Seetharaman. Importance of machine learning in
+making investment decision in stock market. Vikalpa, 46(4):209–222,
+2021.
+[26] L. Sun, W. Xu, J. Liu, and H. Wang. Two-channel attention mech-
+anism fusion model of stock price prediction based on cnn-lstm.
+Transactions on Asian and Low-Resource Language Information Pro-
+cessing, 20(5):1–12, 2021.
+[27] S. Huang, Y. Liu, H. Cui, and etal. Meaformer: An all-mlp transformer
+with temporal external attention for long-term time series forecasting.
+: Preprint submitted to Elsevier
+Page 13 of 14
+Information Sciences, 669:120605, 2024.
+[28] S. Kim and E. Park. Stad-gcn: Spatial–temporal attention-based dy-
+namic graph convolutional network for retail market price prediction.
+Expert Systems with Applications, 255:124553, 2024.
+[29] Z. Yang, T. Zhao, S. Wang, and etal.
+Mdf-dmc: A stock predic-
+tion model combining multi-view stock data features with dynamic
+market correlation information. Expert Systems with Applications,
+238:122134, 2024.
+[30] S. Xiang, D. Cheng, C. Shang, and etal. Temporal and heterogeneous
+graph neural network for financial time series prediction. Proceedings
+of the 31st ACM international conference on information and knowl-
+edge management, pages 3584–3593, 2022.
+[31] T. T. Huynh, M. H. Nguyen, T. T. Nguyen, and etal.
+Efficient
+integration of multi-order dynamics and internal dynamics in stock
+movement prediction.
+Proceedings of the Sixteenth ACM Interna-
+tional Conference on Web Search and Data Mining, pages 850–858,
+2023.
+[32] S. Sabour, N. Frosst, and G. E. Hinton. Dynamic routing between cap-
+sules. Advances in neural information processing systems, 30:3856–
+3866, 2017.
+[33] V. Mazzia, F. Salvetti, and M. Chiaberge. Efficient-capsnet: Capsule
+network with self-attention routing. Scientific reports, 11(1):14634,
+2021.
+[34] R. Zhan, X. Liu, and D. F.and etal. Wong. Meta-curriculum learning
+for domain adaptation in neural machine translation. Proceedings of
+the AAAI Conference on Artificial Intelligence, 35(16):14310–14318,
+2021.
+[35] Z. Chen and Y. Wang. Terminology-enriched meta-curriculum learn-
+ing for domain neural machine translation. International Conference
+on Intelligent Computing. Singapore: Springer Nature Singapore,
+pages 379–390, 2023.
+: Preprint submitted to Elsevier
+Page 14 of 14

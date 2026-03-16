@@ -1,0 +1,647 @@
+{
+  "protocolType": "SEARCH_MACRO",
+  "id": null,
+  "refSeq": "",
+  "result": "GDP（年）的数据如下：\n| GDP（年） | 数据来源 | 2025 | 2024 | 2023 | 2022 | 2021 | 2020 | 2019 | 2018 | 2017 | 2016 |\n| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |\n| 美国:GDP:现价:同比(%) | 美国国家经济分析局 | 5.1 | 5.3 | 6.7 | 9.8 | 11 | -0.8 | 4.3 | 5.3 | 4.3 | 2.8 |\n| 中国:GDP:不变价:同比(%) | 国家统计局 | 5 | 5 | 5.4 | 3.1 | 8.6 | 2.3 | 6.1 | 6.8 | 6.9 | 6.8 |\n\n",
+  "dataTables": [
+    {
+      "code": "宏观数据",
+      "entityName": "GDP（年）",
+      "table": {
+        "EMG00000158": [
+          "美国国家经济分析局",
+          "5.1",
+          "5.3",
+          "6.7",
+          "9.8",
+          "11",
+          "-0.8",
+          "4.3",
+          "5.3",
+          "4.3",
+          "2.8"
+        ],
+        "EMM00000024": [
+          "国家统计局",
+          "5",
+          "5",
+          "5.4",
+          "3.1",
+          "8.6",
+          "2.3",
+          "6.1",
+          "6.8",
+          "6.9",
+          "6.8"
+        ],
+        "headName": [
+          "数据来源",
+          "2025",
+          "2024",
+          "2023",
+          "2022",
+          "2021",
+          "2020",
+          "2019",
+          "2018",
+          "2017",
+          "2016"
+        ]
+      },
+      "rawTable": {
+        "EMG00000158": [
+          "美国国家经济分析局",
+          "5.1",
+          "5.3",
+          "6.7",
+          "9.8",
+          "11.0",
+          "-0.8",
+          "4.3",
+          "5.3",
+          "4.3",
+          "2.8"
+        ],
+        "EMM00000024": [
+          "国家统计局",
+          "5.0",
+          "5.0",
+          "5.4",
+          "3.1",
+          "8.6",
+          "2.3",
+          "6.1",
+          "6.8",
+          "6.9",
+          "6.8"
+        ],
+        "headName": [
+          "数据来源",
+          "2025",
+          "2024",
+          "2023",
+          "2022",
+          "2021",
+          "2020",
+          "2019",
+          "2018",
+          "2017",
+          "2016"
+        ]
+      },
+      "truncateRawTable": {
+        "EMG00000158": [
+          "美国国家经济分析局",
+          "5.1",
+          "5.3",
+          "6.7",
+          "9.8",
+          "11.0",
+          "-0.8",
+          "4.3",
+          "5.3",
+          "4.3",
+          "2.8"
+        ],
+        "EMM00000024": [
+          "国家统计局",
+          "5.0",
+          "5.0",
+          "5.4",
+          "3.1",
+          "8.6",
+          "2.3",
+          "6.1",
+          "6.8",
+          "6.9",
+          "6.8"
+        ],
+        "headName": [
+          "数据来源",
+          "2025",
+          "2024",
+          "2023",
+          "2022",
+          "2021",
+          "2020",
+          "2019",
+          "2018",
+          "2017",
+          "2016"
+        ]
+      },
+      "nameMap": {
+        "EMG00000158": "美国:GDP:现价:同比(%)",
+        "headNameSub": "数据来源",
+        "EMM00000024": "中国:GDP:不变价:同比(%)"
+      },
+      "headNameMap": {},
+      "entityTagList": [
+        {
+          "entityId": "宏观数据",
+          "fullName": "宏观数据",
+          "correct": false,
+          "valuation": false
+        }
+      ],
+      "entityCodes": [
+        "宏观数据"
+      ],
+      "macroAttributeExcelMap": {
+        "EMM00000024": {
+          "macroID": "EMM00000024",
+          "macroName": "中国:GDP:不变价:同比",
+          "unit": "%",
+          "startDate": "2016-01-01",
+          "endDate": "2025-12-31",
+          "dataSource": "国家统计局",
+          "oldMacroID": null,
+          "edbRateEnum": "YEAR",
+          "macroCode": "000100011001000100010041"
+        },
+        "EMG00000158": {
+          "macroID": "EMG00000158",
+          "macroName": "美国:GDP:现价:同比",
+          "unit": "%",
+          "startDate": "2016-01-01",
+          "endDate": "2025-12-31",
+          "dataSource": "美国国家经济分析局",
+          "oldMacroID": null,
+          "edbRateEnum": "YEAR",
+          "macroCode": "00030001000100300028"
+        }
+      },
+      "fieldSet": [
+        {
+          "returnCode": "EMM00000024",
+          "returnName": "中国:GDP:不变价:同比",
+          "classCode": "007502",
+          "startDate": "2016-01-01 00:00:00",
+          "endDate": "2025-12-31 00:00:00",
+          "fuzzy": false,
+          "defineType": -1,
+          "quantType": "4",
+          "returnSourceCode": "EMM00000024",
+          "graph": "2",
+          "unit": "1",
+          "tableType": "7",
+          "unitName": "(%)",
+          "baseUnit": "%",
+          "rate": "8"
+        },
+        {
+          "returnCode": "EMG00000158",
+          "returnName": "美国:GDP:现价:同比",
+          "classCode": "007502",
+          "startDate": "2016-01-01 00:00:00",
+          "endDate": "2025-12-31 00:00:00",
+          "fuzzy": false,
+          "dateGranularity": "9",
+          "defineType": -1,
+          "quantType": "4",
+          "returnSourceCode": "EMG00000158",
+          "graph": "2",
+          "unit": "1",
+          "tableType": "7",
+          "unitName": "(%)",
+          "baseUnit": "%",
+          "rate": "8"
+        }
+      ],
+      "dataTableType": "NORM_TABLE",
+      "rowInfo": {},
+      "colInfo": {},
+      "indicatorOrder": [
+        "EMG00000158",
+        "EMM00000024"
+      ],
+      "tipFlags": [],
+      "dataType": "EDB经济数据",
+      "title": "2016至2025的GDP（年）",
+      "hasThumbnail": true,
+      "indicatorLimited": false,
+      "dataPositionEnum": "MetricLeftTimeTop",
+      "orderCol": {},
+      "jumpUrlList": [
+        {
+          "choiceUrl": "https://choicew2z.eastmoney.com/dataDisplay/macroEDB/#/index?macroids=EMM00000024,EMG00000158",
+          "typeName": "EDB经济数据",
+          "securityName": "宏观数据"
+        }
+      ],
+      "dataTypeEnum": "EDB",
+      "dateRuleSet": [
+        "19"
+      ],
+      "freqConvert": false,
+      "deleteInfo": [],
+      "macroCodeMap": {
+        "EMM00000024": "000100011001000100010041",
+        "EMG00000158": "00030001000100300028"
+      },
+      "indexTable": false,
+      "edbThirdData": false,
+      "indicatorsWithDescription": [],
+      "dataUpdate": {
+        "2025": false
+      },
+      "supportsTimeSeries": false,
+      "estimatedTokens": 0,
+      "summaryTips": {
+        "periodicalReport": null
+      },
+      "nestEntityListMap": {},
+      "excelTimeTruncate": false,
+      "frontendEntityName": "",
+      "frontendEntityCode": "",
+      "frontendTitle": "",
+      "frontendDesc": ""
+    }
+  ],
+  "rawDataTables": [
+    {
+      "code": "宏观数据",
+      "entityName": "GDP（年）",
+      "table": {
+        "EMG00000158": [
+          "5.1",
+          "5.3",
+          "6.7",
+          "9.8",
+          "11",
+          "-0.8",
+          "4.3",
+          "5.3",
+          "4.3",
+          "2.8"
+        ],
+        "date": [
+          "2025",
+          "2024",
+          "2023",
+          "2022",
+          "2021",
+          "2020",
+          "2019",
+          "2018",
+          "2017",
+          "2016"
+        ],
+        "headNameSub": [
+          "美国国家经济分析局"
+        ]
+      },
+      "rawTable": {
+        "EMG00000158": [
+          "5.1",
+          "5.3",
+          "6.7",
+          "9.8",
+          "11.0",
+          "-0.8",
+          "4.3",
+          "5.3",
+          "4.3",
+          "2.8"
+        ],
+        "date": [
+          "2025",
+          "2024",
+          "2023",
+          "2022",
+          "2021",
+          "2020",
+          "2019",
+          "2018",
+          "2017",
+          "2016"
+        ],
+        "headNameSub": [
+          "美国国家经济分析局"
+        ]
+      },
+      "truncateRawTable": {
+        "EMG00000158": [
+          "5.1",
+          "5.3",
+          "6.7",
+          "9.8",
+          "11.0",
+          "-0.8",
+          "4.3",
+          "5.3",
+          "4.3",
+          "2.8"
+        ],
+        "date": [
+          "2025",
+          "2024",
+          "2023",
+          "2022",
+          "2021",
+          "2020",
+          "2019",
+          "2018",
+          "2017",
+          "2016"
+        ],
+        "headNameSub": [
+          "美国国家经济分析局"
+        ]
+      },
+      "nameMap": {
+        "EMG00000158": "美国:GDP:现价:同比(%)",
+        "headNameSub": "数据来源"
+      },
+      "headNameMap": {},
+      "field": {
+        "returnCode": "EMG00000158",
+        "returnName": "美国:GDP:现价:同比",
+        "classCode": "007502",
+        "startDate": "2016-01-01 00:00:00",
+        "endDate": "2025-12-31 00:00:00",
+        "fuzzy": false,
+        "defineType": -1,
+        "quantType": "4",
+        "returnSourceCode": "EMG00000158",
+        "graph": "2",
+        "unit": "1",
+        "tableType": "7",
+        "unitName": "(%)",
+        "baseUnit": "%",
+        "rate": "8"
+      },
+      "entityTagList": [
+        {
+          "entityId": "宏观数据",
+          "fullName": "宏观数据",
+          "correct": false,
+          "valuation": false
+        }
+      ],
+      "entityCodes": [
+        "宏观数据"
+      ],
+      "macroAttributeExcelMap": {
+        "EMG00000158": {
+          "macroID": "EMG00000158",
+          "macroName": "美国:GDP:现价:同比",
+          "unit": "%",
+          "startDate": "2016-01-01",
+          "endDate": "2025-12-31",
+          "dataSource": "美国国家经济分析局",
+          "oldMacroID": null,
+          "edbRateEnum": "YEAR",
+          "macroCode": "00030001000100300028"
+        }
+      },
+      "fieldSet": [
+        {
+          "returnCode": "EMG00000158",
+          "returnName": "美国:GDP:现价:同比",
+          "classCode": "007502",
+          "startDate": "2016-01-01 00:00:00",
+          "endDate": "2025-12-31 00:00:00",
+          "fuzzy": false,
+          "defineType": -1,
+          "quantType": "4",
+          "returnSourceCode": "EMG00000158",
+          "graph": "2",
+          "unit": "1",
+          "tableType": "7",
+          "unitName": "(%)",
+          "baseUnit": "%",
+          "rate": "8"
+        }
+      ],
+      "dataTableType": "NORM_TABLE",
+      "rowInfo": {},
+      "colInfo": {},
+      "tipFlags": [],
+      "hasThumbnail": true,
+      "indicatorLimited": false,
+      "dataPositionEnum": "MetricLeftTimeTop",
+      "orderCol": {},
+      "jumpUrlList": [
+        {
+          "choiceUrl": "https://choicew2z.eastmoney.com/dataDisplay/macroEDB/#/index?macroids=EMG00000158",
+          "typeName": "EDB经济数据",
+          "securityName": "宏观数据"
+        }
+      ],
+      "dataTypeEnum": "EDB",
+      "dateRuleSet": [],
+      "freqConvert": false,
+      "deleteInfo": [],
+      "macroCodeMap": {
+        "EMG00000158": "00030001000100300028"
+      },
+      "indexTable": false,
+      "edbThirdData": false,
+      "dataUpdate": {},
+      "supportsTimeSeries": false,
+      "estimatedTokens": 0,
+      "summaryTips": {
+        "periodicalReport": null
+      },
+      "nestEntityListMap": {},
+      "excelTimeTruncate": false,
+      "frontendEntityName": "",
+      "frontendEntityCode": "",
+      "frontendTitle": "",
+      "frontendDesc": ""
+    },
+    {
+      "code": "宏观数据",
+      "entityName": "GDP（年）",
+      "table": {
+        "EMM00000024": [
+          "5",
+          "5",
+          "5.4",
+          "3.1",
+          "8.6",
+          "2.3",
+          "6.1",
+          "6.8",
+          "6.9",
+          "6.8"
+        ],
+        "date": [
+          "2025",
+          "2024",
+          "2023",
+          "2022",
+          "2021",
+          "2020",
+          "2019",
+          "2018",
+          "2017",
+          "2016"
+        ],
+        "headNameSub": [
+          "国家统计局"
+        ]
+      },
+      "rawTable": {
+        "EMM00000024": [
+          "5.0",
+          "5.0",
+          "5.4",
+          "3.1",
+          "8.6",
+          "2.3",
+          "6.1",
+          "6.8",
+          "6.9",
+          "6.8"
+        ],
+        "date": [
+          "2025",
+          "2024",
+          "2023",
+          "2022",
+          "2021",
+          "2020",
+          "2019",
+          "2018",
+          "2017",
+          "2016"
+        ],
+        "headNameSub": [
+          "国家统计局"
+        ]
+      },
+      "truncateRawTable": {
+        "EMM00000024": [
+          "5.0",
+          "5.0",
+          "5.4",
+          "3.1",
+          "8.6",
+          "2.3",
+          "6.1",
+          "6.8",
+          "6.9",
+          "6.8"
+        ],
+        "date": [
+          "2025",
+          "2024",
+          "2023",
+          "2022",
+          "2021",
+          "2020",
+          "2019",
+          "2018",
+          "2017",
+          "2016"
+        ],
+        "headNameSub": [
+          "国家统计局"
+        ]
+      },
+      "nameMap": {
+        "EMM00000024": "中国:GDP:不变价:同比(%)",
+        "headNameSub": "数据来源"
+      },
+      "headNameMap": {},
+      "field": {
+        "returnCode": "EMM00000024",
+        "returnName": "中国:GDP:不变价:同比",
+        "classCode": "007502",
+        "startDate": "2016-01-01 00:00:00",
+        "endDate": "2025-12-31 00:00:00",
+        "fuzzy": false,
+        "defineType": -1,
+        "quantType": "4",
+        "returnSourceCode": "EMM00000024",
+        "graph": "2",
+        "unit": "1",
+        "tableType": "7",
+        "unitName": "(%)",
+        "baseUnit": "%",
+        "rate": "8"
+      },
+      "entityTagList": [
+        {
+          "entityId": "宏观数据",
+          "fullName": "宏观数据",
+          "correct": false,
+          "valuation": false
+        }
+      ],
+      "entityCodes": [
+        "宏观数据"
+      ],
+      "macroAttributeExcelMap": {
+        "EMM00000024": {
+          "macroID": "EMM00000024",
+          "macroName": "中国:GDP:不变价:同比",
+          "unit": "%",
+          "startDate": "2016-01-01",
+          "endDate": "2025-12-31",
+          "dataSource": "国家统计局",
+          "oldMacroID": null,
+          "edbRateEnum": "YEAR",
+          "macroCode": "000100011001000100010041"
+        }
+      },
+      "fieldSet": [
+        {
+          "returnCode": "EMM00000024",
+          "returnName": "中国:GDP:不变价:同比",
+          "classCode": "007502",
+          "startDate": "2016-01-01 00:00:00",
+          "endDate": "2025-12-31 00:00:00",
+          "fuzzy": false,
+          "defineType": -1,
+          "quantType": "4",
+          "returnSourceCode": "EMM00000024",
+          "graph": "2",
+          "unit": "1",
+          "tableType": "7",
+          "unitName": "(%)",
+          "baseUnit": "%",
+          "rate": "8"
+        }
+      ],
+      "dataTableType": "NORM_TABLE",
+      "rowInfo": {},
+      "colInfo": {},
+      "tipFlags": [],
+      "hasThumbnail": true,
+      "indicatorLimited": false,
+      "dataPositionEnum": "MetricLeftTimeTop",
+      "orderCol": {},
+      "jumpUrlList": [
+        {
+          "choiceUrl": "https://choicew2z.eastmoney.com/dataDisplay/macroEDB/#/index?macroids=EMM00000024",
+          "typeName": "EDB经济数据",
+          "securityName": "宏观数据"
+        }
+      ],
+      "dataTypeEnum": "EDB",
+      "dateRuleSet": [],
+      "freqConvert": false,
+      "deleteInfo": [],
+      "macroCodeMap": {
+        "EMM00000024": "000100011001000100010041"
+      },
+      "indexTable": false,
+      "edbThirdData": false,
+      "dataUpdate": {},
+      "supportsTimeSeries": false,
+      "estimatedTokens": 0,
+      "summaryTips": {
+        "periodicalReport": null
+      },
+      "nestEntityListMap": {},
+      "excelTimeTruncate": false,
+      "frontendEntityName": "",
+      "frontendEntityCode": "",
+      "frontendTitle": "",
+      "frontendDesc": ""
+    }
+  ]
+}

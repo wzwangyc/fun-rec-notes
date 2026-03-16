@@ -1,0 +1,61 @@
+{
+  "version": 1,
+  "skills": {
+    "self-improving-agent": {
+      "version": "3.0.0",
+      "installedAt": 1773133606966
+    },
+    "tavily-search": {
+      "version": "1.0.0",
+      "installedAt": 1773134072994
+    },
+    "find-skills": {
+      "version": "0.1.0",
+      "installedAt": 1773134076100
+    },
+    "summarize": {
+      "version": "1.0.0",
+      "installedAt": 1773134079209
+    },
+    "gog": {
+      "version": "1.0.0",
+      "installedAt": 1773134082334
+    },
+    "github": {
+      "version": "1.0.0",
+      "installedAt": 1773134085588
+    },
+    "proactive-agent": {
+      "version": "3.1.0",
+      "installedAt": 1773134089646
+    },
+    "skill-vetter": {
+      "version": "1.0.0",
+      "installedAt": 1773134093146
+    },
+    "nano-pdf": {
+      "version": "1.0.0",
+      "installedAt": 1773134096890
+    },
+    "notion": {
+      "version": "1.0.0",
+      "installedAt": 1773134100007
+    },
+    "pdf-to-structured": {
+      "version": "2.0.0",
+      "installedAt": 1773346428783
+    },
+    "openocr-skill": {
+      "version": "0.1.6",
+      "installedAt": 1773346439245
+    },
+    "browser-automation": {
+      "version": "1.0.1",
+      "installedAt": 1773377296493
+    },
+    "react-best-practices": {
+      "version": "1.0.0",
+      "installedAt": 1773377397022
+    }
+  }
+}

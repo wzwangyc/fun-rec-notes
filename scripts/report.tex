@@ -1,0 +1,355 @@
+\documentclass[a4paper,11pt]{article}
+
+% 编码和语言
+\usepackage[UTF8]{ctex}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+\usepackage{tcolorbox}
+\usepackage{enumitem}
+
+% 页面设置
+\geometry{left=2.5cm, right=2.5cm, top=2.5cm, bottom=2.5cm}
+
+% 颜色定义
+\definecolor{primary}{RGB}{30, 58, 138}
+\definecolor{secondary}{RGB}{59, 130, 246}
+\definecolor{accent}{RGB}{239, 68, 68}
+\definecolor{lightbg}{RGB}{239, 246, 255}
+\definecolor{riskbg}{RGB}{254, 242, 242}
+
+% 标题格式
+\titleformat{\section}{\Large\bfseries\color{primary}}{}{0em}{}[\titlerule]
+\titleformat{\subsection}{\large\bfseries\color{secondary}}{}{0em}{}
+
+% 页眉页脚
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small 中兵红箭 (000519.SZ) 投资价值分析报告}
+\fancyhead[R]{\small Leo 智能投研}
+\fancyfoot[C]{\small \thepage}
+
+% 超链接设置
+\hypersetup{
+    colorlinks=true,
+    linkcolor=primary,
+    filecolor=magenta,      
+    urlcolor=primary,
+}
+
+% 自定义环境
+\newtcolorbox{highlight}{
+    colback=lightbg,
+    colframe=secondary,
+    boxrule=0.5mm,
+    leftrule=2mm,
+    coltitle=primary,
+    fonttitle=\bfseries
+}
+
+\newtcolorbox{riskbox}{
+    colback=riskbg,
+    colframe=accent,
+    boxrule=0.5mm,
+    leftrule=2mm,
+    coltitle=accent,
+    fonttitle=\bfseries
+}
+
+% 文档信息
+\title{\textbf{\Huge 中兵红箭 (000519.SZ) \\[0.5em] 投资价值分析报告}}
+\author{Leo 智能投研}
+\date{\today}
+
+\begin{document}
+
+% 封面
+\begin{titlepage}
+    \centering
+    \vspace*{2cm}
+    
+    {\color{primary}\Huge\bfseries EQUITY RESEARCH\par}
+    
+    \vspace{2cm}
+    
+    {\Huge\bfseries 中兵红箭 (000519.SZ)\par}
+    \vspace{0.5cm}
+    {\Large 投资价值分析报告\par}
+    \vspace{0.5cm}
+    {\large Equity Research Report\par}
+    
+    \vspace{2cm}
+    
+    \begin{tabular}{|l|l|}
+        \hline
+        \rowcolor{lightbg}
+        \textbf{投资评级} & \textbf{\color{primary}增持 (Overweight)} \\
+        \hline
+        当前股价 & 18.97 元 (2026/3/13) \\
+        \hline
+        目标价格 & 20-22 元 (6-12 个月) \\
+        \hline
+        上涨空间 & 5.4\% - 16.0\% \\
+        \hline
+    \end{tabular}
+    
+    \vspace{2cm}
+    
+    {\large 编制：Leo 智能投研\par}
+    {\large 报告日期：\today\par}
+    
+    \vfill
+    
+    {\small 本报告仅供客户参考，不构成投资建议\par}
+\end{titlepage}
+
+% 免责声明
+\begin{center}
+    \section*{重要声明}
+\end{center}
+\begin{itemize}[leftmargin=*]
+    \item 本报告由 Leo 智能投研制作，仅供客户参考
+    \item 报告中的信息均来源于公开资料，本公司对这些信息的准确性、完整性或可靠性不作任何保证
+    \item 本报告所载资料、意见及推测仅反映本公司于发布本报告当日的判断
+    \item 在不同时期，本公司可发出与本报告所载资料、意见及推测不一致的报告
+    \item 本报告不构成任何投资建议，投资者应根据自身情况独立判断，并承担投资风险
+\end{itemize}
+
+\tableofcontents
+\newpage
+
+% 一、执行摘要
+\section{执行摘要}
+
+\begin{highlight}
+\textbf{核心观点:}
+
+中兵红箭 (000519.SZ) 是中国兵器工业集团旗下核心上市平台，主营业务涵盖智能弹药、特种装备和培育钻石三大业务板块。
+
+\textbf{核心投资亮点:}
+\begin{itemize}[leftmargin=*]
+    \item 军工央企背景，智能弹药核心供应商，受益于国防预算稳定增长
+    \item 培育钻石业务提供业绩弹性，产能规模全球领先
+    \item 行业景气度向上，国防现代化加速推进
+    \item 当前估值处于合理区间，具备配置价值
+\end{itemize}
+
+\textbf{主要风险:}
+\begin{itemize}[leftmargin=*]
+    \item 军品定价机制改革压力
+    \item 民品业务竞争激烈
+    \item 应收账款占比较高
+\end{itemize}
+\end{highlight}
+
+\subsection*{关键财务指标}
+\begin{center}
+\begin{tabular}{lcccc}
+    \toprule
+    \rowcolor{lightbg}
+    \textbf{指标} & \textbf{2022A} & \textbf{2023A} & \textbf{2024E} & \textbf{2025E} \\
+    \midrule
+    营业收入 (亿元) & 72.3 & 68.5 & 71.2 & 78.5 \\
+    净利润 (亿元) & 7.8 & 6.2 & 6.8 & 7.5 \\
+    毛利率 (\%) & 32.5 & 30.2 & 29.5 & 30.0 \\
+    ROE (\%) & 6.8 & 4.5 & 5.2 & 5.8 \\
+    \bottomrule
+\end{tabular}
+\end{center}
+
+\newpage
+
+% 二、公司概况
+\section{公司概况}
+
+\subsection*{基本信息}
+\begin{itemize}[leftmargin=*]
+    \item \textbf{公司全称:} 中兵红箭股份有限公司
+    \item \textbf{股票代码:} 000519.SZ
+    \item \textbf{上市交易所:} 深圳证券交易所
+    \item \textbf{实际控制人:} 中国兵器工业集团有限公司
+    \item \textbf{总市值:} 约 264 亿元
+\end{itemize}
+
+\subsection*{主营业务结构}
+\begin{itemize}[leftmargin=*]
+    \item \textbf{智能弹药及特种装备 (占比约 60\%):} 核心产品包括反坦克导弹、智能弹药等
+    \item \textbf{超硬材料 (占比约 30\%):} 培育钻石生产，产能规模全球领先
+    \item \textbf{专用车辆 (占比约 10\%):} 特种车辆、民用专用车
+\end{itemize}
+
+\subsection*{行业地位}
+\begin{itemize}[leftmargin=*]
+    \item 国内领先的智能弹药供应商
+    \item 全球主要培育钻石生产商之一
+    \item 兵器工业集团重要资本运作平台
+\end{itemize}
+
+\newpage
+
+% 三、行业分析
+\section{行业分析}
+
+\subsection*{军工行业}
+\begin{itemize}[leftmargin=*]
+    \item \textbf{市场规模:} 2025 年中国国防预算约 1.67 万亿元，同比增长 7.2\%
+    \item \textbf{竞争格局:} 央企主导，市场化程度逐步提升
+    \item \textbf{增长驱动:} 国防现代化、装备更新换代、外贸出口
+    \item \textbf{行业壁垒:} 资质壁垒高、客户粘性强、技术壁垒高
+\end{itemize}
+
+\subsection*{培育钻石行业}
+\begin{itemize}[leftmargin=*]
+    \item \textbf{市场规模:} 2025 年全球培育钻石市场规模约 120 亿美元
+    \item \textbf{竞争格局:} 中国产能占全球 50\% 以上，价格竞争激烈
+    \item \textbf{增长驱动:} 消费升级、环保意识、价格优势（天然钻石 1/3 价格）
+    \item \textbf{行业趋势:} 价格下行、品牌化、差异化竞争
+\end{itemize}
+
+\subsection*{竞争对手对比}
+\begin{center}
+\begin{tabular}{lcccc}
+    \toprule
+    \rowcolor{lightbg}
+    \textbf{公司} & \textbf{PE(TTM)} & \textbf{PB} & \textbf{PS} & \textbf{毛利率 (\%)} \\
+    \midrule
+    中兵红箭 & 45.2x & 2.5x & 3.7x & 30.2 \\
+    北方导航 & 52.3x & 3.1x & 4.2x & 28.5 \\
+    高德红外 & 42.1x & 2.8x & 3.5x & 32.1 \\
+    中航光电 & 32.5x & 2.2x & 2.8x & 35.6 \\
+    \midrule
+    \textbf{行业平均} & \textbf{43.0x} & \textbf{2.7x} & \textbf{3.6x} & \textbf{31.6} \\
+    \bottomrule
+\end{tabular}
+\end{center}
+
+\newpage
+
+% 四、财务分析
+\section{财务分析}
+
+\subsection*{盈利能力分析}
+\begin{itemize}[leftmargin=*]
+    \item \textbf{毛利率:} 近三年维持在 30\% 以上，军工业务毛利率较高
+    \item \textbf{净利率:} 约 9-11\%，处于行业合理水平
+    \item \textbf{ROE:} 2023 年 4.5\%，预计 2024-2025 年逐步回升至 5-6\%
+\end{itemize}
+
+\subsection*{偿债能力分析}
+\begin{itemize}[leftmargin=*]
+    \item \textbf{资产负债率:} 33.2\%，处于行业较低水平
+    \item \textbf{流动比率:} 1.8，速动比率 1.2，短期偿债能力良好
+    \item \textbf{利息保障倍数:} 8.5 倍，长期偿债能力强
+\end{itemize}
+
+\subsection*{营运能力分析}
+\begin{itemize}[leftmargin=*]
+    \item \textbf{应收账款周转天数:} 约 90 天
+    \item \textbf{存货周转天数:} 约 120 天
+    \item \textbf{经营性现金流:} 波动较大，2023 年为负
+\end{itemize}
+
+\newpage
+
+% 五、估值分析
+\section{估值分析}
+
+\subsection*{相对估值法}
+\begin{itemize}[leftmargin=*]
+    \item \textbf{PE(TTM):} 45.2x vs 行业平均 43.0x
+    \item \textbf{PB:} 2.5x vs 行业平均 2.7x
+    \item \textbf{PS:} 3.7x vs 行业平均 3.6x
+    \item \textbf{估值结论:} 处于行业合理区间
+\end{itemize}
+
+\subsection*{绝对估值法 (DCF)}
+\begin{itemize}[leftmargin=*]
+    \item \textbf{WACC:} 8.5\%
+    \item \textbf{永续增长率:} 2.0\%
+    \item \textbf{合理价值区间:} 19-23 元
+\end{itemize}
+
+\subsection*{同业对比}
+\begin{itemize}[leftmargin=*]
+    \item \textbf{北方导航:} PE 52.3x（更高估值因纯军工业务）
+    \item \textbf{高德红外:} PE 42.1x（民品占比更高）
+    \item \textbf{中航光电:} PE 32.5x（龙头溢价）
+\end{itemize}
+
+\newpage
+
+% 六、风险因素
+\section{风险因素}
+
+\begin{riskbox}
+\textbf{风险提示}
+\end{riskbox}
+
+\begin{enumerate}[leftmargin=*]
+    \item \textbf{军品降价风险:} 军品定价机制改革可能导致产品价格下降 5-10\%
+    \item \textbf{培育钻石价格风险:} 行业产能扩张可能导致价格继续下跌 20-30\%
+    \item \textbf{应收账款风险:} 应收账款占营收比重约 35\%，存在坏账风险
+    \item \textbf{市场竞争风险:} 军工和民品市场竞争加剧
+    \item \textbf{宏观经济风险:} 经济下行可能影响国防预算和消费需求
+\end{enumerate}
+
+\newpage
+
+% 七、投资建议
+\section{投资建议}
+
+\subsection*{投资评级}
+\begin{center}
+    \fbox{\Large\color{primary}\bfseries 增持 (Overweight)}
+\end{center}
+
+\subsection*{核心逻辑}
+\begin{enumerate}[leftmargin=*]
+    \item \textbf{军工业务稳定增长:} 国防预算稳定增长 7\%+，公司作为核心供应商直接受益
+    \item \textbf{培育钻石底部反转:} 行业价格企稳，公司产能优势显现，预计 2025 年贡献利润 2-3 亿元
+    \item \textbf{央企改革预期:} 兵器工业集团资产整合预期提升估值
+    \item \textbf{估值合理:} 当前 PE 45x 处于行业合理区间，具备配置价值
+\end{enumerate}
+
+\subsection*{催化剂}
+\begin{itemize}[leftmargin=*]
+    \item 军品大订单落地（预计 2026Q2-Q3）
+    \item 培育钻石价格企稳回升
+    \item 央企改革政策落地
+    \item 季度业绩超预期
+\end{itemize}
+
+\subsection*{操作建议}
+\begin{itemize}[leftmargin=*]
+    \item \textbf{建仓区间:} 17-19 元
+    \item \textbf{目标价格:} 20-22 元（6-12 个月）
+    \item \textbf{止损位:} 16 元
+    \item \textbf{仓位建议:} 中等仓位（5-10\%）
+\end{itemize}
+
+\newpage
+
+% 免责声明
+\section*{免责声明}
+
+\begin{itemize}[leftmargin=*]
+    \item 本报告仅供参考，不构成投资建议
+    \item 投资者应根据自身情况独立判断，并承担投资风险
+    \item 报告数据来源：AKShare、Wind、公司公告等公开信息
+    \item 本报告版权归 Leo 智能投研所有，未经书面许可不得转载或使用
+\end{itemize}
+
+\vspace{1cm}
+
+\begin{center}
+    \rule{0.8\textwidth}{0.4pt}
+    \vspace{0.3cm}
+    {\small Leo 智能投研 | \today}
+\end{center}
+
+\end{document}

@@ -1,0 +1,8 @@
+金融数据查询结果说明
+========================================
+查询内容: 东方财富的基本面
+数据文件路径: workspace\MX_FinData\MX_FinData_5a368dfc.xlsx
+描述文件路径: workspace\MX_FinData\MX_FinData_5a368dfc_description.txt
+数据行数: 22
+表数量: 3
+Sheet 列表: 东方财富(300059.SZ)的市盈率PE(TTM)、市净率P, 东方财富(300059.SZ)当前的市净率、市销率TTM等, 东方财富(300059.SZ)的营业总收入、归属于母公司股东的

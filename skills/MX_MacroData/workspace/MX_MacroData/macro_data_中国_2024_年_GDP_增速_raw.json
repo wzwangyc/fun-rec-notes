@@ -1,0 +1,580 @@
+{
+  "protocolType": "SEARCH_MACRO",
+  "id": null,
+  "refSeq": "",
+  "result": "GDP（季）的数据如下：\n| GDP（季） | 数据来源 | 2024-Q4 | 2024-Q3 | 2024-Q2 | 2024-Q1 |\n| --- | --- | --- | --- | --- | --- |\n| 中国:GDP:不变价:累计同比(%) | 国家统计局 | 5 | 4.8 | 5 | 5.3 |\n\nGDP（年）的数据如下：\n| GDP（年） | 数据来源 | 2024 |\n| --- | --- | --- |\n| 中国:GDP:不变价:同比(%) | 国家统计局 | 5 |\n\n",
+  "dataTables": [
+    {
+      "code": "宏观数据",
+      "entityName": "GDP（季）",
+      "table": {
+        "EMM00000008": [
+          "国家统计局",
+          "5",
+          "4.8",
+          "5",
+          "5.3"
+        ],
+        "headName": [
+          "数据来源",
+          "2024-Q4",
+          "2024-Q3",
+          "2024-Q2",
+          "2024-Q1"
+        ]
+      },
+      "rawTable": {
+        "EMM00000008": [
+          "国家统计局",
+          "5.0",
+          "4.8",
+          "5.0",
+          "5.3"
+        ],
+        "headName": [
+          "数据来源",
+          "2024-Q4",
+          "2024-Q3",
+          "2024-Q2",
+          "2024-Q1"
+        ]
+      },
+      "truncateRawTable": {
+        "EMM00000008": [
+          "国家统计局",
+          "5.0",
+          "4.8",
+          "5.0",
+          "5.3"
+        ],
+        "headName": [
+          "数据来源",
+          "2024-Q4",
+          "2024-Q3",
+          "2024-Q2",
+          "2024-Q1"
+        ]
+      },
+      "nameMap": {
+        "EMM00000008": "中国:GDP:不变价:累计同比(%)",
+        "headNameSub": "数据来源"
+      },
+      "headNameMap": {},
+      "entityTagList": [
+        {
+          "entityId": "宏观数据",
+          "fullName": "宏观数据",
+          "correct": false,
+          "valuation": false
+        }
+      ],
+      "entityCodes": [
+        "宏观数据"
+      ],
+      "macroAttributeExcelMap": {
+        "EMM00000008": {
+          "macroID": "EMM00000008",
+          "macroName": "中国:GDP:不变价:累计同比",
+          "unit": "%",
+          "startDate": "2024-01-01",
+          "endDate": "2024-12-31",
+          "dataSource": "国家统计局",
+          "oldMacroID": null,
+          "edbRateEnum": "QUARTER",
+          "macroCode": "000100171004000400010002"
+        }
+      },
+      "fieldSet": [
+        {
+          "returnCode": "EMM00000008",
+          "returnName": "中国:GDP:不变价:累计同比",
+          "classCode": "007502",
+          "startDate": "2024-01-01 00:00:00",
+          "endDate": "2024-12-31 00:00:00",
+          "fuzzy": false,
+          "dateGranularity": "9",
+          "defineType": -1,
+          "quantType": "4",
+          "returnSourceCode": "EMM00000008",
+          "graph": "2",
+          "unit": "1",
+          "tableType": "7",
+          "unitName": "(%)",
+          "baseUnit": "%",
+          "rate": "6"
+        }
+      ],
+      "dataTableType": "NORM_TABLE",
+      "rowInfo": {},
+      "colInfo": {},
+      "indicatorOrder": [
+        "EMM00000008"
+      ],
+      "tipFlags": [],
+      "dataType": "EDB经济数据",
+      "title": "2024-Q1至2024-Q4的GDP（季）",
+      "hasThumbnail": true,
+      "indicatorLimited": false,
+      "dataPositionEnum": "MetricLeftTimeTop",
+      "orderCol": {},
+      "jumpUrlList": [
+        {
+          "choiceUrl": "https://choicew2z.eastmoney.com/dataDisplay/macroEDB/#/index?macroids=EMM00000008",
+          "typeName": "EDB经济数据",
+          "securityName": "宏观数据"
+        }
+      ],
+      "dataTypeEnum": "EDB",
+      "dateRuleSet": [
+        "19"
+      ],
+      "freqConvert": false,
+      "deleteInfo": [],
+      "macroCodeMap": {
+        "EMM00000008": "000100171004000400010002"
+      },
+      "indexTable": false,
+      "edbThirdData": false,
+      "indicatorsWithDescription": [],
+      "dataUpdate": {
+        "2024-Q4": false
+      },
+      "supportsTimeSeries": false,
+      "estimatedTokens": 0,
+      "summaryTips": {
+        "periodicalReport": null
+      },
+      "nestEntityListMap": {},
+      "excelTimeTruncate": false,
+      "frontendEntityName": "",
+      "frontendEntityCode": "",
+      "frontendTitle": "",
+      "frontendDesc": ""
+    },
+    {
+      "code": "宏观数据",
+      "entityName": "GDP（年）",
+      "table": {
+        "EMM00000024": [
+          "国家统计局",
+          "5"
+        ],
+        "headName": [
+          "数据来源",
+          "2024"
+        ]
+      },
+      "rawTable": {
+        "EMM00000024": [
+          "国家统计局",
+          "5.0"
+        ],
+        "headName": [
+          "数据来源",
+          "2024"
+        ]
+      },
+      "truncateRawTable": {
+        "EMM00000024": [
+          "国家统计局",
+          "5.0"
+        ],
+        "headName": [
+          "数据来源",
+          "2024"
+        ]
+      },
+      "nameMap": {
+        "EMM00000024": "中国:GDP:不变价:同比(%)",
+        "headNameSub": "数据来源"
+      },
+      "headNameMap": {},
+      "entityTagList": [
+        {
+          "entityId": "宏观数据",
+          "fullName": "宏观数据",
+          "correct": false,
+          "valuation": false
+        }
+      ],
+      "entityCodes": [
+        "宏观数据"
+      ],
+      "macroAttributeExcelMap": {
+        "EMM00000024": {
+          "macroID": "EMM00000024",
+          "macroName": "中国:GDP:不变价:同比",
+          "unit": "%",
+          "startDate": "2024-01-01",
+          "endDate": "2024-12-31",
+          "dataSource": "国家统计局",
+          "oldMacroID": null,
+          "edbRateEnum": "YEAR",
+          "macroCode": "000100011001000100010041"
+        }
+      },
+      "fieldSet": [
+        {
+          "returnCode": "EMM00000024",
+          "returnName": "中国:GDP:不变价:同比",
+          "classCode": "007502",
+          "startDate": "2024-01-01 00:00:00",
+          "endDate": "2024-12-31 00:00:00",
+          "fuzzy": false,
+          "dateGranularity": "9",
+          "defineType": -1,
+          "quantType": "4",
+          "returnSourceCode": "EMM00000024",
+          "graph": "2",
+          "unit": "1",
+          "tableType": "7",
+          "unitName": "(%)",
+          "baseUnit": "%",
+          "rate": "8"
+        }
+      ],
+      "dataTableType": "NORM_TABLE",
+      "rowInfo": {},
+      "colInfo": {},
+      "indicatorOrder": [
+        "EMM00000024"
+      ],
+      "tipFlags": [],
+      "dataType": "EDB经济数据",
+      "title": "2024的GDP（年）",
+      "hasThumbnail": true,
+      "indicatorLimited": false,
+      "dataPositionEnum": "MetricLeftTimeTop",
+      "orderCol": {},
+      "jumpUrlList": [
+        {
+          "choiceUrl": "https://choicew2z.eastmoney.com/dataDisplay/macroEDB/#/index?macroids=EMM00000024",
+          "typeName": "EDB经济数据",
+          "securityName": "宏观数据"
+        }
+      ],
+      "dataTypeEnum": "EDB",
+      "dateRuleSet": [
+        "19"
+      ],
+      "freqConvert": false,
+      "deleteInfo": [],
+      "macroCodeMap": {
+        "EMM00000024": "000100011001000100010041"
+      },
+      "indexTable": false,
+      "edbThirdData": false,
+      "indicatorsWithDescription": [],
+      "dataUpdate": {
+        "2024": false
+      },
+      "supportsTimeSeries": false,
+      "estimatedTokens": 0,
+      "summaryTips": {
+        "periodicalReport": null
+      },
+      "nestEntityListMap": {},
+      "excelTimeTruncate": false,
+      "frontendEntityName": "",
+      "frontendEntityCode": "",
+      "frontendTitle": "",
+      "frontendDesc": ""
+    }
+  ],
+  "rawDataTables": [
+    {
+      "code": "宏观数据",
+      "entityName": "GDP（季）",
+      "table": {
+        "EMM00000008": [
+          "5",
+          "4.8",
+          "5",
+          "5.3"
+        ],
+        "date": [
+          "2024-Q4",
+          "2024-Q3",
+          "2024-Q2",
+          "2024-Q1"
+        ],
+        "headNameSub": [
+          "国家统计局"
+        ]
+      },
+      "rawTable": {
+        "EMM00000008": [
+          "5.0",
+          "4.8",
+          "5.0",
+          "5.3"
+        ],
+        "date": [
+          "2024-Q4",
+          "2024-Q3",
+          "2024-Q2",
+          "2024-Q1"
+        ],
+        "headNameSub": [
+          "国家统计局"
+        ]
+      },
+      "truncateRawTable": {
+        "EMM00000008": [
+          "5.0",
+          "4.8",
+          "5.0",
+          "5.3"
+        ],
+        "date": [
+          "2024-Q4",
+          "2024-Q3",
+          "2024-Q2",
+          "2024-Q1"
+        ],
+        "headNameSub": [
+          "国家统计局"
+        ]
+      },
+      "nameMap": {
+        "EMM00000008": "中国:GDP:不变价:累计同比(%)",
+        "headNameSub": "数据来源"
+      },
+      "headNameMap": {},
+      "field": {
+        "returnCode": "EMM00000008",
+        "returnName": "中国:GDP:不变价:累计同比",
+        "classCode": "007502",
+        "startDate": "2024-01-01 00:00:00",
+        "endDate": "2024-12-31 00:00:00",
+        "fuzzy": false,
+        "defineType": -1,
+        "quantType": "4",
+        "returnSourceCode": "EMM00000008",
+        "graph": "2",
+        "unit": "1",
+        "tableType": "7",
+        "unitName": "(%)",
+        "baseUnit": "%",
+        "rate": "6"
+      },
+      "entityTagList": [
+        {
+          "entityId": "宏观数据",
+          "fullName": "宏观数据",
+          "correct": false,
+          "valuation": false
+        }
+      ],
+      "entityCodes": [
+        "宏观数据"
+      ],
+      "macroAttributeExcelMap": {
+        "EMM00000008": {
+          "macroID": "EMM00000008",
+          "macroName": "中国:GDP:不变价:累计同比",
+          "unit": "%",
+          "startDate": "2024-01-01",
+          "endDate": "2024-12-31",
+          "dataSource": "国家统计局",
+          "oldMacroID": null,
+          "edbRateEnum": "QUARTER",
+          "macroCode": "000100171004000400010002"
+        }
+      },
+      "fieldSet": [
+        {
+          "returnCode": "EMM00000008",
+          "returnName": "中国:GDP:不变价:累计同比",
+          "classCode": "007502",
+          "startDate": "2024-01-01 00:00:00",
+          "endDate": "2024-12-31 00:00:00",
+          "fuzzy": false,
+          "defineType": -1,
+          "quantType": "4",
+          "returnSourceCode": "EMM00000008",
+          "graph": "2",
+          "unit": "1",
+          "tableType": "7",
+          "unitName": "(%)",
+          "baseUnit": "%",
+          "rate": "6"
+        }
+      ],
+      "dataTableType": "NORM_TABLE",
+      "rowInfo": {},
+      "colInfo": {},
+      "tipFlags": [],
+      "hasThumbnail": true,
+      "indicatorLimited": false,
+      "dataPositionEnum": "MetricLeftTimeTop",
+      "orderCol": {},
+      "jumpUrlList": [
+        {
+          "choiceUrl": "https://choicew2z.eastmoney.com/dataDisplay/macroEDB/#/index?macroids=EMM00000008",
+          "typeName": "EDB经济数据",
+          "securityName": "宏观数据"
+        }
+      ],
+      "dataTypeEnum": "EDB",
+      "dateRuleSet": [],
+      "freqConvert": false,
+      "deleteInfo": [],
+      "macroCodeMap": {
+        "EMM00000008": "000100171004000400010002"
+      },
+      "indexTable": false,
+      "edbThirdData": false,
+      "dataUpdate": {},
+      "supportsTimeSeries": false,
+      "estimatedTokens": 0,
+      "summaryTips": {
+        "periodicalReport": null
+      },
+      "nestEntityListMap": {},
+      "excelTimeTruncate": false,
+      "frontendEntityName": "",
+      "frontendEntityCode": "",
+      "frontendTitle": "",
+      "frontendDesc": ""
+    },
+    {
+      "code": "宏观数据",
+      "entityName": "GDP（年）",
+      "table": {
+        "EMM00000024": [
+          "5"
+        ],
+        "date": [
+          "2024"
+        ],
+        "headNameSub": [
+          "国家统计局"
+        ]
+      },
+      "rawTable": {
+        "EMM00000024": [
+          "5.0"
+        ],
+        "date": [
+          "2024"
+        ],
+        "headNameSub": [
+          "国家统计局"
+        ]
+      },
+      "truncateRawTable": {
+        "EMM00000024": [
+          "5.0"
+        ],
+        "date": [
+          "2024"
+        ],
+        "headNameSub": [
+          "国家统计局"
+        ]
+      },
+      "nameMap": {
+        "EMM00000024": "中国:GDP:不变价:同比(%)",
+        "headNameSub": "数据来源"
+      },
+      "headNameMap": {},
+      "field": {
+        "returnCode": "EMM00000024",
+        "returnName": "中国:GDP:不变价:同比",
+        "classCode": "007502",
+        "startDate": "2024-01-01 00:00:00",
+        "endDate": "2024-12-31 00:00:00",
+        "fuzzy": false,
+        "defineType": -1,
+        "quantType": "4",
+        "returnSourceCode": "EMM00000024",
+        "graph": "2",
+        "unit": "1",
+        "tableType": "7",
+        "unitName": "(%)",
+        "baseUnit": "%",
+        "rate": "8"
+      },
+      "entityTagList": [
+        {
+          "entityId": "宏观数据",
+          "fullName": "宏观数据",
+          "correct": false,
+          "valuation": false
+        }
+      ],
+      "entityCodes": [
+        "宏观数据"
+      ],
+      "macroAttributeExcelMap": {
+        "EMM00000024": {
+          "macroID": "EMM00000024",
+          "macroName": "中国:GDP:不变价:同比",
+          "unit": "%",
+          "startDate": "2024-01-01",
+          "endDate": "2024-12-31",
+          "dataSource": "国家统计局",
+          "oldMacroID": null,
+          "edbRateEnum": "YEAR",
+          "macroCode": "000100011001000100010041"
+        }
+      },
+      "fieldSet": [
+        {
+          "returnCode": "EMM00000024",
+          "returnName": "中国:GDP:不变价:同比",
+          "classCode": "007502",
+          "startDate": "2024-01-01 00:00:00",
+          "endDate": "2024-12-31 00:00:00",
+          "fuzzy": false,
+          "defineType": -1,
+          "quantType": "4",
+          "returnSourceCode": "EMM00000024",
+          "graph": "2",
+          "unit": "1",
+          "tableType": "7",
+          "unitName": "(%)",
+          "baseUnit": "%",
+          "rate": "8"
+        }
+      ],
+      "dataTableType": "NORM_TABLE",
+      "rowInfo": {},
+      "colInfo": {},
+      "tipFlags": [],
+      "hasThumbnail": true,
+      "indicatorLimited": false,
+      "dataPositionEnum": "MetricLeftTimeTop",
+      "orderCol": {},
+      "jumpUrlList": [
+        {
+          "choiceUrl": "https://choicew2z.eastmoney.com/dataDisplay/macroEDB/#/index?macroids=EMM00000024",
+          "typeName": "EDB经济数据",
+          "securityName": "宏观数据"
+        }
+      ],
+      "dataTypeEnum": "EDB",
+      "dateRuleSet": [],
+      "freqConvert": false,
+      "deleteInfo": [],
+      "macroCodeMap": {
+        "EMM00000024": "000100011001000100010041"
+      },
+      "indexTable": false,
+      "edbThirdData": false,
+      "dataUpdate": {},
+      "supportsTimeSeries": false,
+      "estimatedTokens": 0,
+      "summaryTips": {
+        "periodicalReport": null
+      },
+      "nestEntityListMap": {},
+      "excelTimeTruncate": false,
+      "frontendEntityName": "",
+      "frontendEntityCode": "",
+      "frontendTitle": "",
+      "frontendDesc": ""
+    }
+  ]
+}

@@ -46,9 +46,14 @@ def send_email(subject, content):
         return False
 
 if __name__ == "__main__":
-    # 测试邮件
-    subject = "[任务完成提醒] 论文学习已完成"
-    content = """
+    # 支持命令行参数：python send_email.py "主题" "内容"
+    if len(sys.argv) >= 3:
+        subject = sys.argv[1]
+        content = sys.argv[2]
+    else:
+        # 测试邮件
+        subject = "[任务完成提醒] 论文学习已完成"
+        content = """
 Yucheng，你好！
 
 已完成的任务：

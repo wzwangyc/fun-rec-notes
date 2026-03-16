@@ -1,4 +1,4 @@
-# Fun-Rec 推荐系统学习笔记
+# Fun-Rec 推荐系统task1学习笔记
 
 **课程来源：** Datawhale fun-rec 开源教程
 

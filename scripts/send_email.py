@@ -15,7 +15,7 @@ import sys
 SMTP_SERVER = "smtp.163.com"
 SMTP_PORT = 465
 SENDER_EMAIL = "wangreits@163.com"
-SENDER_PASSWORD = "UUvrFFxwUCp4SKFW"  # SMTP 授权码
+SENDER_PASSWORD = "VWTcb3AnHgZbDvyA"  # SMTP 授权码
 RECEIVER_EMAIL = "wangreits@163.com"
 
 def send_email(subject, content):

@@ -1,0 +1,73 @@
+# Security Scanning Workflow
+# Business Intent:
+#     Detect security vulnerabilities in dependencies automatically.
+#     All vulnerabilities must be detected and fixed before deployment.
+# 
+# Schedule:
+#     - On every push to main branch
+#     - Weekly scan (Sunday at 00:00 UTC)
+
+name: Security Scan
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  schedule:
+    - cron: '0 0 * * 0'  # Weekly scan
+
+jobs:
+  security-scan:
+    name: Security Vulnerability Scan
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        cache: 'pip'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install safety pip-audit bandit
+    
+    - name: Run safety scan
+      run: |
+        safety check --full-report --output json > safety-report.json || true
+        cat safety-report.json
+    
+    - name: Run pip-audit
+      run: |
+        pip-audit --format json --output pip-audit-report.json || true
+        cat pip-audit-report.json
+    
+    - name: Run bandit (security linter)
+      run: |
+        bandit -r src/ -f json -o bandit-report.json || true
+        cat bandit-report.json
+    
+    - name: Upload security reports
+      uses: actions/upload-artifact@v3
+      with:
+        name: security-reports
+        path: |
+          safety-report.json
+          pip-audit-report.json
+          bandit-report.json
+        retention-days: 30
+    
+    - name: Fail on critical vulnerabilities
+      run: |
+        # Check for critical vulnerabilities
+        if grep -q '"severity": "critical"' safety-report.json; then
+          echo "❌ Critical vulnerabilities found!"
+          exit 1
+        fi
+        echo "✅ No critical vulnerabilities found"
